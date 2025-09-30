@@ -8,13 +8,14 @@ vehicles[0].regNumber = "ABC123";
 vehicles[0].dateTimeArrival = "";
 vehicles[0].dateTimeDeparture = "";
 
+
 Console.WriteLine("Test. Lägg till ett nytt fordon. ");
 
 // Försöker lösa så att informationen hamnar på en viss plats i vektorn
 FindFreeSpace();
 
-Console.WriteLine("Test. Skriv ut alla fordon.");
-PrintAllVehicles(vehicles);
+Console.WriteLine("Test. Sök efter fordon.");
+SearchForVehicle(vehicles);
 
 
 Console.WriteLine("\n\nTryck på valfri tangent för att avsluta...");
@@ -30,7 +31,7 @@ void FindFreeSpace()
         }
         else
         {
-            VehicleRegistration(vehicles, i);
+            VehicleRegistration(vehicles, i);   // Kanske borde returnera ett värde istället? 
             break;
         }
 
@@ -71,9 +72,9 @@ static string VehicleType()
 static string VehicleRegNumber()
 {
     Console.Write("\nFyll i fordonets registreringsnummer (avsluta med [Enter]): ");
-    string regNumber = Console.ReadLine();
+    string regNumber = Console.ReadLine().ToUpper();        // ToUpper gör alla bokstäver till stora bokstäver --> regnumren formateras likadant 
 
-    if (regNumber == "")
+    if (regNumber == "") //TODO: Finns det fler ogiltiga villkor?
     {
         Console.WriteLine("Ogitligt registreringsnummer. Vänligen försök igen");
         return VehicleRegNumber();
@@ -109,6 +110,38 @@ void PrintAllVehicles(Vehicles[] vehicles)
             Console.WriteLine();
         }
     }
+}
+
+void SearchForVehicle(Vehicles[] vehicles)
+{
+    Console.WriteLine("\t -- SÖKA EFTER FORDON --");
+    Console.WriteLine("Skriv in fordonets registreringsnummer");
+    string searchRegNumber = Console.ReadLine().ToUpper();          // ToUpper igen
+    bool vehicleFound = false;
+
+    // Ändra till i = 1 för att inte få med test-fordonet
+    for (int i = 0; i < vehicles.Length; i++)
+    {
+        if (vehicles[i].regNumber != null)
+        {
+            if (vehicles[i].regNumber == searchRegNumber)
+            {
+                Console.WriteLine("Fordonet finns på plats: {0}", i);
+                vehicleFound = true;
+                break;
+            }
+        }
+        // Är else överflödigt?
+        else
+        {
+            continue;
+        }
+    }
+    if (vehicleFound == false)
+    {
+        Console.WriteLine("Fordonet hittades inte. \nKontrollera registreringsnumret och sök igen.");
+    }
+
 }
 
 internal struct Vehicles
