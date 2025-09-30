@@ -11,35 +11,38 @@ vehicles[0].dateTimeDeparture = "";
 Console.WriteLine("Test. Lägg till ett nytt fordon. ");
 
 // Försöker lösa så att informationen hamnar på en viss plats i vektorn
-for (int i = 0; i < vehicles.Length; i++)
-{
-    if (vehicles[i].type != null)     // Här kanske man får ändra sen om type = MC
-    {
-        continue;
-    }
-    else
-    {
-        VehicleRegistration(vehicles, i);
-        break;
-    }
+FindFreeSpace();
 
-}
-
-
-/*
 Console.WriteLine("Test. Skriv ut alla fordon.");
-PrintAllVehicles(vehicles);*/
+PrintAllVehicles(vehicles);
 
 
 Console.WriteLine("\n\nTryck på valfri tangent för att avsluta...");
 Console.ReadKey();
+
+void FindFreeSpace()
+{
+    for (int i = 0; i < vehicles.Length; i++)
+    {
+        if (vehicles[i].type != null)     // Här kanske man får ändra sen om type = MC
+        {
+            continue;
+        }
+        else
+        {
+            VehicleRegistration(vehicles, i);
+            break;
+        }
+
+    }
+}
 
 void VehicleRegistration(Vehicles[] vehicles, int index)
 {
     // Ska anropa andra metoder här för att fylla i .type, .regNumber etc.
     vehicles[index].type = VehicleType();
     vehicles[index].regNumber = VehicleRegNumber();
-    Console.WriteLine($"Parkera fordonet på plats: {index}");
+    Console.WriteLine($"\nParkera fordonet på plats: {index}");
 }
 
 static string VehicleType()
@@ -67,7 +70,7 @@ static string VehicleType()
 
 static string VehicleRegNumber()
 {
-    Console.Write("\n\nFyll i fordonets registreringsnummer (avsluta med [Enter]): ");
+    Console.Write("\nFyll i fordonets registreringsnummer (avsluta med [Enter]): ");
     string regNumber = Console.ReadLine();
 
     if (regNumber == "")
@@ -98,7 +101,7 @@ void PrintAllVehicles(Vehicles[] vehicles)
     for (int i = 0; i < vehicles.Length; i++)
     {
         // Lägger till if-sats för att inte skriva ut alla tomma p-platser
-        if (vehicles[i].type != "")
+        if (vehicles[i].type != null)
         {
             Console.WriteLine("Fordonstyp: {0}", vehicles[i].type);
             Console.WriteLine("Registreringsnummer: {0}", vehicles[i].regNumber);
