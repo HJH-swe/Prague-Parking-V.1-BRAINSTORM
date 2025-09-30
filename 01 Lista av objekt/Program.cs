@@ -85,12 +85,13 @@ static string VehicleRegNumber()
     }
 }
 
-void PrintVehicleInfo(Vehicles[] vehicles, int index)
+void PrintVehicleInfo(Vehicles[] vehicles, int index)       
 {
+    Console.Clear();
     Console.WriteLine();
     Console.WriteLine(vehicles[index].type);
     Console.WriteLine(vehicles[index].regNumber);
-    Console.WriteLine($"Parkera på plats: {index}");
+    Console.WriteLine($"Finns på plats: {index}");
 }
 
 void PrintAllVehicles(Vehicles[] vehicles)
@@ -114,7 +115,7 @@ void PrintAllVehicles(Vehicles[] vehicles)
 
 void SearchForVehicle(Vehicles[] vehicles)
 {
-    Console.WriteLine("\t -- SÖKA EFTER FORDON --");
+    Console.WriteLine("\t -- SÖK EFTER FORDON --");
     Console.WriteLine("Skriv in fordonets registreringsnummer");
     string searchRegNumber = Console.ReadLine().ToUpper();          // ToUpper igen
     bool vehicleFound = false;
@@ -126,7 +127,7 @@ void SearchForVehicle(Vehicles[] vehicles)
         {
             if (vehicles[i].regNumber == searchRegNumber)
             {
-                Console.WriteLine("Fordonet finns på plats: {0}", i);
+                PrintVehicleInfo(vehicles, i);
                 vehicleFound = true;
                 break;
             }
