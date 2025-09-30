@@ -9,17 +9,18 @@ vehicles[0].dateTimeArrival = "";
 vehicles[0].dateTimeDeparture = "";
 
 Console.WriteLine("Test. Lägg till ett nytt fordon. ");
-// Försöker lösa så att informationen hamnar på en viss plats i vektorn
 
+// Försöker lösa så att informationen hamnar på en viss plats i vektorn
 for (int i = 0; i < vehicles.Length; i++)
 {
-    if (vehicles[i].type != "")     // Här kanske man får ändra sen om type = MC
+    if (vehicles[i].type != null)     // Här kanske man får ändra sen om type = MC
     {
         continue;
     }
     else
     {
         VehicleRegistration(vehicles, i);
+        break;
     }
 
 }
@@ -66,7 +67,7 @@ static string VehicleType()
 
 static string VehicleRegNumber()
 {
-    Console.Write("\n\nFyll i fordonets registreringsnummer (avsluta med [Enter]: ");
+    Console.Write("\n\nFyll i fordonets registreringsnummer (avsluta med [Enter]): ");
     string regNumber = Console.ReadLine();
 
     if (regNumber == "")
@@ -96,10 +97,14 @@ void PrintAllVehicles(Vehicles[] vehicles)
     //TODO: Innan inlämning: Ändra till i = 1 för att inte ta med test-fordonet
     for (int i = 0; i < vehicles.Length; i++)
     {
-        Console.WriteLine("Fordonstyp: {0}", vehicles[i].type);
-        Console.WriteLine("Registreringsnummer: {0}", vehicles[i].regNumber);
-        Console.WriteLine("Parkeringsplats: {0}", i);
-        Console.WriteLine();
+        // Lägger till if-sats för att inte skriva ut alla tomma p-platser
+        if (vehicles[i].type != "")
+        {
+            Console.WriteLine("Fordonstyp: {0}", vehicles[i].type);
+            Console.WriteLine("Registreringsnummer: {0}", vehicles[i].regNumber);
+            Console.WriteLine("Parkeringsplats: {0}", i);
+            Console.WriteLine();
+        }
     }
 }
 
