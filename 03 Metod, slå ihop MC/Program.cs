@@ -4,6 +4,8 @@
 // Eventuella svårigheter: Se till att det bara blir 2 MC på samma plats,
 // alltså att programmet inte försöker parkera alla MC på samma plats
 
+Console.WriteLine("test");
+
 void MergeMC()
 {
     for (int i = 0; i < vehicles.Length; i++)
