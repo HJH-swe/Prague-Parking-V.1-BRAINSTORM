@@ -9,6 +9,9 @@ vehicles[0].dateTimeArrival = "";
 vehicles[0].dateTimeDeparture = "";
 
 
+Console.WriteLine("Hej Sadok!");
+
+Console.WriteLine(vehicles);
 Console.WriteLine("Test. Lägg till ett nytt fordon. ");
 
 // Försöker lösa så att informationen hamnar på en viss plats i vektorn

@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01 Registrera och skriva ut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02 Meny", "02 Meny\02 Meny.csproj", "{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03 Metod, slå ihop MC", "03 Metod, slå ihop MC\03 Metod, slå ihop MC.csproj", "{C1B39301-4B74-4686-8CB9-02ED3F1B024B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04 Test projekt", "04 Test projekt\04 Test projekt.csproj", "{AD6A1D1E-A046-471D-AF39-DD369FF57736}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B39301-4B74-4686-8CB9-02ED3F1B024B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B39301-4B74-4686-8CB9-02ED3F1B024B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B39301-4B74-4686-8CB9-02ED3F1B024B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B39301-4B74-4686-8CB9-02ED3F1B024B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
