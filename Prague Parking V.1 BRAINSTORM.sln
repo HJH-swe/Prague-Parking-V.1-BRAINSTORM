@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
+VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "01 Registrera och skriva ut fordon", "01 Lista av objekt\01 Registrera och skriva ut fordon.csproj", "{64694729-B410-4E36-9D6F-B2B2EDA1EA20}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02 Meny", "02 Meny\02 Meny.csproj", "{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Öva parkering", "..\Objektorienterad programmering\Inspelade förläsningar\Öva parkering\Öva parkering\Öva parkering.csproj", "{E3E4A01F-B613-C73D-8217-8C963A3B0877}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C21A2BFF-82C3-4654-8971-9AB09BF09D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3E4A01F-B613-C73D-8217-8C963A3B0877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3E4A01F-B613-C73D-8217-8C963A3B0877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3E4A01F-B613-C73D-8217-8C963A3B0877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3E4A01F-B613-C73D-8217-8C963A3B0877}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
