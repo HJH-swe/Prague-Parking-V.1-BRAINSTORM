@@ -213,3 +213,40 @@ Parkeringsplats:
    0 eller 1 bilplats
    0, 1 eller 2 MC-plats
 */
+
+
+string fordonsTyp = "CAR";
+
+string skiljetecken = "#";
+
+string regNummer = "ABC123";
+
+int platsNummer = 3;
+
+string[] PHus = new string[101];
+
+ParkeraFordon(PHus, skiljetecken, fordonsTyp, regNummer, platsNummer);
+Console.WriteLine($"Plats nummer {platsNummer}: {PHus[platsNummer]}");
+Console.WriteLine(HämtaPRuta(PHus, platsNummer));
+
+
+void ParkeraFordon(string[] PHus, string skiljetecken, string fordonsTyp, string regNummer, int platsNummer)
+{
+    //Stoppa in fordonet på angiven plats
+    PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
+}
+{
+
+    //Stoppa in fordonet på angiven plats
+
+    PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
+
+}
+
+
+string HämtaPRuta(string[] PHus, int platsNummer)
+{
+    //Hämta fordonet på angiven plats
+    string[] temp = PHus[platsNummer].Split('#');
+    return String.Format("Plats nummer: {0} innehåller fordonstyp: {1} med registreringsnummer: {2}", platsNummer, temp[0], temp[1]);
+}
