@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "02 Meny", "02 Meny\02 Meny.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03 Metod, slå ihop MC", "03 Metod, slå ihop MC\03 Metod, slå ihop MC.csproj", "{C1B39301-4B74-4686-8CB9-02ED3F1B024B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04 Test projekt", "04 Test projekt\04 Test projekt.csproj", "{AD6A1D1E-A046-471D-AF39-DD369FF57736}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04 Meny, metoder och Claes kod", "04 Test projekt\04 Meny, metoder och Claes kod.csproj", "{AD6A1D1E-A046-471D-AF39-DD369FF57736}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
