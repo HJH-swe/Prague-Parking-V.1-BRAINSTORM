@@ -187,11 +187,11 @@ void SearchVehicle()
     Console.ReadKey();
 }
 
-// HJH: Börjar här efter lunch. Får inte till MoveVehicle
+// HJH: Får inte till MoveVehicle-metoden.
+// Man borde kunna använda SearchVehicle, men jag löser inte hur
 void MoveVehicle()  
 {
     SearchVehicle();
-    Console.WriteLine("Vilken plats vill du flytta {0} till?");
 }
 
 // En metod som skriver ut info om fordon. Kan användas i andra metoder:
