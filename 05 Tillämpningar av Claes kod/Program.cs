@@ -187,11 +187,10 @@ void SearchVehicle()
     Console.ReadKey();
 }
 
-// HJH: Får inte till MoveVehicle-metoden.
-// Man borde kunna använda SearchVehicle, men jag löser inte hur
+// HJH: Man borde kunna använda SearchVehicle, men jag löser inte hur
 void MoveVehicle()  
 {
-    SearchVehicle();
+
 }
 
 // En metod som skriver ut info om fordon. Kan användas i andra metoder:
