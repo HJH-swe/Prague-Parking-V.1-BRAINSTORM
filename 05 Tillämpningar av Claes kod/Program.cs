@@ -1,5 +1,6 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
 
+
 string vehicleType;
 string regNumber;
 string typeDivider = "#";
@@ -32,6 +33,7 @@ void MainMenu()
     Console.WriteLine("\t6) Historik/Logg");
     Console.WriteLine("\t7) Avsluta");
 
+    // La till try-catch för att säkra upp koden
     try
     {
         int menuInput = int.Parse(Console.ReadLine());
@@ -48,7 +50,7 @@ void MainMenu()
             case 2:
                 {
                     Console.Clear();
-                    //SearchVehicle();
+                    SearchVehicle();
                     break;
                 }
             case 3:
@@ -96,67 +98,167 @@ void MainMenu()
     }
 }
 
-    //Registrera parkering:
-    void RegisterParking()
+//Registrera parkering:
+void RegisterParking()
+{
+    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
+    // Gjorde om till knappalternativ, så användaren inte skriver "bil", "car", eller nåt annat själv
+    vehicleType = VehicleType();
+
+    Console.Write("\nAnge registreringsnummer: ");
+    regNumber = Console.ReadLine().ToUpper();
+
+    for (int i = 1; i < parkingSpaces.Length; i++)
     {
-        Console.Write("Ange fordonstyp: ");             // Ska vi göra knappalternativ? Så användaren inte skriver "bil" ibland och "car" ibland
-        vehicleType = Console.ReadLine().ToUpper();     // ToUpper gör alla bokstäver till stora bokstäver
-
-        Console.Write("\nAnge registreringsnummer: ");
-        regNumber = Console.ReadLine().ToUpper();
-
-        for (int i = 1; i < parkingSpaces.Length; i++)
+        if (parkingSpaces[i] == null || parkingSpaces[i] == "")     // la till == "". När vi tar bort bilar blir nog värdet ""
         {
-            if (parkingSpaces[i] == null || parkingSpaces[i] == "")     // la till == "". När vi tar bort bilar blir nog värdet ""
+            parkingSpaces[i] = vehicleType + typeDivider + regNumber;
+            Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+            return;
+        }
+
+    }
+}
+
+static string VehicleType()
+{
+    Console.WriteLine("\nVälj fordonstyp:");
+    Console.WriteLine("\t[1] Bil");
+    Console.WriteLine("\t[2] MC");
+    try
+    {
+        int menuSelect = int.Parse(Console.ReadLine());
+        //TODO: Lägg till funktion, fånga upp om användaren inte skriver en siffra
+
+        switch (menuSelect)
+        {
+            case 1:
+                return "CAR";
+
+            case 2:
+                return "MC";
+
+            default:
+                Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");     
+                return VehicleType();
+        }
+    }
+    catch
+    {
+
+        Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");
+        return VehicleType();
+    }
+    
+}
+
+
+void SearchVehicle()
+{
+    Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
+    Console.WriteLine("Skriv in fordonets registreringsnummer");
+    string searchRegNumber = Console.ReadLine().ToUpper();          // ToUpper igen
+    bool vehicleFound = false;
+
+    // TODO: Ändra till i = 1 för att inte få med test-fordonet
+    for (int i = 0; i < parkingSpaces.Length; i++)
+    {
+        if (parkingSpaces[i] != null && parkingSpaces[i] != "")     // Om värdet inte är null eller "" står det ett fordon på p-platsen
+        {
+            if (parkingSpaces[i].Contains(searchRegNumber))
             {
-                parkingSpaces[i] = vehicleType + typeDivider + regNumber;
-                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
-                return;
+                // Om fordonet hittades ska info skrivas ut
+                Console.WriteLine(PrintVehicleInfo(i));
+                vehicleFound = true;
+                break;
             }
 
         }
+        // Är else överflödigt?
+        else
+        {
+            continue;
+        }
     }
 
-
-
-
-
-
-    /*
-    // Här börjar Claes kod
-    string fordonsTyp = "CAR";
-
-    string skiljetecken = "#";
-
-    string regNummer = "ABC123";
-
-    int platsNummer = 3;
-
-    string[] PHus = new string[101];
-
-    ParkeraFordon(PHus, skiljetecken, fordonsTyp, regNummer, platsNummer);
-    Console.WriteLine($"Plats nummer {platsNummer}: {PHus[platsNummer]}");
-    Console.WriteLine(HämtaPRuta(PHus, platsNummer));
-
-
-    void ParkeraFordon(string[] PHus, string skiljetecken, string fordonsTyp, string regNummer, int platsNummer)
+    // Om fordonet fortfarande inte hittats efter for-loopen
+    if (vehicleFound == false)
     {
-        //Stoppa in fordonet på angiven plats
-        PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
+        Console.WriteLine("\n\nFordonet hittades inte. \nKontrollera registreringsnumret och sök igen.");
     }
+    Console.ReadKey();
+}
+
+// En metod som skriver ut info om fordon:
+string PrintVehicleInfo(int index)
+{
+    string[] temp = parkingSpaces[index].Split('#');
+    return String.Format("{0} {1} står på plats: {2}", temp[0], temp[1], index);
+}
+
+//En metod som skriver info om p-plats (t.ex. om det står 2 mc eller ett fordon på platsen)
+// Behövs den här metoden?
+string PrintParkingSpaceInfo(int index)
+{
+    //Om det står 2 MC på platsen kommer det finnas | i strängen
+    if (parkingSpaces[index].Contains("|"))
     {
-
-        //Stoppa in fordonet på angiven plats
-
-        PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
-
+        string[] splitMC = parkingSpaces[index].Split('|');
+        string[] temp0 = splitMC[0].Split("#");
+        string[] temp1 = splitMC[1].Split("#");
+        return String.Format($"Det står två MC på plats {index}: \n{temp0[1]} \n{temp1[1]}");
     }
-
-
-    string HämtaPRuta(string[] PHus, int platsNummer)
+    // Om det inte står 2 MC på platsen, står det ett fordon på platsen
+    else
     {
-        //Hämta fordonet på angiven plats
-        string[] temp = PHus[platsNummer].Split('#');
-        return String.Format("Plats nummer: {0} innehåller fordonstyp: {1} med registreringsnummer: {2}", platsNummer, temp[0], temp[1]);
+        string[] temp = parkingSpaces[index].Split('#');
+        return String.Format("{0} {1} står på plats: {2}", temp[0], temp[1], index);
     }
-    */
+}
+
+
+
+
+
+
+/*
+// Här börjar Claes kod:
+
+string fordonsTyp = "CAR";
+
+string skiljetecken = "#";
+
+string regNummer = "ABC123";
+
+int platsNummer = 3;
+
+string[] PHus = new string[101];
+
+ParkeraFordon(PHus, skiljetecken, fordonsTyp, regNummer, platsNummer);
+Console.WriteLine($"Plats nummer {platsNummer}: {PHus[platsNummer]}");
+Console.WriteLine(HämtaPRuta(PHus, platsNummer));
+
+
+void ParkeraFordon(string[] PHus, string skiljetecken, string fordonsTyp, string regNummer, int platsNummer)
+{
+    //Stoppa in fordonet på angiven plats
+    PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
+}
+{
+
+    //Stoppa in fordonet på angiven plats
+
+    PHus[platsNummer] = fordonsTyp + skiljetecken + regNummer;
+
+}
+
+
+string HämtaPRuta(string[] PHus, int platsNummer)
+{
+    //Hämta fordonet på angiven plats
+    string[] temp = PHus[platsNummer].Split('#');
+    return String.Format("Plats nummer: {0} innehåller fordonstyp: {1} med registreringsnummer: {2}", platsNummer, temp[0], temp[1]);
+}
+*/
+
+//TODO: bestäm och utforma enhetligt användargränssnitt
