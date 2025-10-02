@@ -187,7 +187,7 @@ void SearchVehicle()
     Console.ReadKey();
 }
 
-// HJH: Man borde kunna använda SearchVehicle, men jag löser inte hur
+// HJH: Man borde kunna använda SearchVehicle
 void MoveVehicle()  
 {
 
