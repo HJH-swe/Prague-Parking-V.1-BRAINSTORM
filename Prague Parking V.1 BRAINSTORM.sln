@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03 Metod, slå ihop MC", "0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04 Meny, metoder och Claes kod", "04 Test projekt\04 Meny, metoder och Claes kod.csproj", "{AD6A1D1E-A046-471D-AF39-DD369FF57736}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05 Meny och metoder (utan objekt)", "05 Tillämpningar av Claes kod\05 Meny och metoder (utan objekt).csproj", "{2902B337-2998-483C-AF00-C00F9A871832}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD6A1D1E-A046-471D-AF39-DD369FF57736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2902B337-2998-483C-AF00-C00F9A871832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2902B337-2998-483C-AF00-C00F9A871832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2902B337-2998-483C-AF00-C00F9A871832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2902B337-2998-483C-AF00-C00F9A871832}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

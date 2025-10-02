@@ -30,7 +30,7 @@ do
 //Meny
 void MainMenu()
 {
-    Console.WriteLine("\t~ Parque Parking ~\n");
+    Console.WriteLine("\t~ Prague Parking ~\n");
 
     Console.WriteLine("\t1) Registrera parkering");
     Console.WriteLine("\t2) Sök fordon");
@@ -115,7 +115,7 @@ void RegisterParking(string vehicle, string regNumber, int ParkingNumber)
         if (ParkingGarage[i] == null)
         {
             ParkingGarage[ParkingNumber] = vehicle + skiljetecken + regNumber;
-            Console.WriteLine($"Fordon: {vehicle} {skiljetecken} {regNumber} parkeras på plats nr: [i] ");
+            Console.WriteLine($"Fordon: {vehicle} {skiljetecken} {regNumber} parkeras på plats nr: {i} ");
             return;
         }
 

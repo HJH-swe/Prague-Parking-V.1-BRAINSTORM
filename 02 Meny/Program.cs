@@ -3,8 +3,6 @@
 
 MainMenu();
 
-Console.WriteLine("Test commit");
-
 
 Console.ReadKey();
 
