@@ -27,7 +27,7 @@ void MainMenu()
 
     Console.WriteLine("\t1) Registrera parkering");
     Console.WriteLine("\t2) Sök fordon");
-    Console.WriteLine("\t3) Ändra parkering");
+    Console.WriteLine("\t3) Flytta fordon");
     Console.WriteLine("\t4) Checka ut fordon");
     Console.WriteLine("\t5) Översikt parkering");
     Console.WriteLine("\t6) Historik/Logg");
@@ -56,7 +56,7 @@ void MainMenu()
             case 3:
                 {
                     Console.Clear();
-                    //ChangeParking();
+                    MoveVehicle();
                     break;
                 }
             case 4:
@@ -98,6 +98,7 @@ void MainMenu()
     }
 }
 
+
 //Registrera parkering:
 void RegisterParking()
 {
@@ -128,8 +129,6 @@ static string VehicleType()
     try
     {
         int menuSelect = int.Parse(Console.ReadLine());
-        //TODO: Lägg till funktion, fånga upp om användaren inte skriver en siffra
-
         switch (menuSelect)
         {
             case 1:
@@ -156,7 +155,7 @@ static string VehicleType()
 void SearchVehicle()
 {
     Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-    Console.WriteLine("Skriv in fordonets registreringsnummer");
+    Console.WriteLine("Skriv in fordonets registreringsnummer:");
     string searchRegNumber = Console.ReadLine().ToUpper();          // ToUpper igen
     bool vehicleFound = false;
 
@@ -170,7 +169,6 @@ void SearchVehicle()
                 // Om fordonet hittades ska info skrivas ut
                 Console.WriteLine(PrintVehicleInfo(i));
                 vehicleFound = true;
-                break;
             }
 
         }
@@ -189,7 +187,14 @@ void SearchVehicle()
     Console.ReadKey();
 }
 
-// En metod som skriver ut info om fordon:
+// HJH: Börjar här efter lunch. Får inte till MoveVehicle
+void MoveVehicle()  
+{
+    SearchVehicle();
+    Console.WriteLine("Vilken plats vill du flytta {0} till?");
+}
+
+// En metod som skriver ut info om fordon. Kan användas i andra metoder:
 string PrintVehicleInfo(int index)
 {
     string[] temp = parkingSpaces[index].Split('#');
