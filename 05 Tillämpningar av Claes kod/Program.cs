@@ -87,6 +87,7 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-7");
+                    Console.ReadKey();
                     break;
                 }
         }
@@ -94,8 +95,10 @@ void MainMenu()
     catch
     {
         Console.WriteLine("Ogiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
-        MainMenu();
+        Console.ReadKey(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
+        //Tar bort MainMenu(); då felmeddelandet inte visas pga att Console.Clear(); tar bort allt i consolen 
     }
+
 }
 
 
@@ -148,6 +151,7 @@ static string VehicleType()
         Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");
         return VehicleType();
     }
+    
     
 }
 
