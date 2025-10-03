@@ -37,6 +37,7 @@ void MainMenu()
     Console.Write("\n\tVälj ett alternativ (1-7): "); // la till denna för gränssnittet
 
     // La till try-catch för att säkra upp koden
+    
     try
     {
         int menuInput = int.Parse(Console.ReadLine());
@@ -98,7 +99,7 @@ void MainMenu()
     catch
     {
         Console.WriteLine("Ogiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
-        Console.ReadKey(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
+        Console.ReadLine(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
         //Tar bort MainMenu(); då felmeddelandet inte visas pga att Console.Clear(); tar bort allt i consolen 
     }
 
@@ -168,6 +169,7 @@ void SearchVehicle()
     bool vehicleFound = false;
 
     // TODO: Ändra till i = 1 för att inte få med test-fordonet
+    //bör vi ha ett felmeddelande där det står att det inte finns några parkerade fordon om det är 0 parkerade fordon? /SR
     for (int i = 0; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i] != null && parkingSpaces[i] != "")     // Om värdet inte är null eller "" står det ett fordon på p-platsen
