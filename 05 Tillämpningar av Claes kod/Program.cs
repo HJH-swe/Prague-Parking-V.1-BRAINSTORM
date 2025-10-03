@@ -112,7 +112,6 @@ void RegisterParking()
     Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
     // Gjorde om till knappalternativ, så användaren inte skriver "bil", "car", eller nåt annat själv
     vehicleType = VehicleType();
-
     Console.Write("\nAnge registreringsnummer: ");
     regNumber = Console.ReadLine().ToUpper();
 
@@ -232,7 +231,8 @@ string PrintParkingSpaceInfo(int index)
 
 string SaveLog(string vehicleType, string typeDivider, string regNumber, int parkingPlace, DateTime startTime)
 {
-    string log = ($"{startTime: yyyy-MM-dd HH:mm:ss} - {vehicleType}{typeDivider}{regNumber} parkeras på plats {parkingPlace}");
+    string log = ($"Parkeringplats {parkingPlace}: {vehicleType}{typeDivider}{regNumber}\tIncheckad: {startTime: yyyy-MM-dd HH:mm:ss}");
+
     logs.Add(log);
     return log;
 }
