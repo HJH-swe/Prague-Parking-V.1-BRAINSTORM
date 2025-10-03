@@ -7,6 +7,7 @@ string typeDivider = "#";
 string mcDivider = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
+List<string> logs = new List<string>();     //skapar en lista för händelser
 
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
@@ -33,6 +34,7 @@ void MainMenu()
     Console.WriteLine("\t6) Historik/Logg");
     Console.WriteLine("\t7) Avsluta");
 
+    
     // La till try-catch för att säkra upp koden
     try
     {
@@ -74,7 +76,7 @@ void MainMenu()
             case 6:
                 {
                     Console.Clear();
-                    //DisplayLog();
+                    DisplayLog();
                     break;
                 }
             case 7:
@@ -118,6 +120,7 @@ void RegisterParking()
         {
             parkingSpaces[i] = vehicleType + typeDivider + regNumber;
             Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+            SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
             return;
         }
 
@@ -224,8 +227,27 @@ string PrintParkingSpaceInfo(int index)
     }
 }
 
+string SaveLog(string vehicleType, string typeDivider, string regNumber, int parkingPlace, DateTime startTime)
+{
+    string log = ($"{startTime: yyyy-MM-dd HH:mm:ss} - {vehicleType}{typeDivider}{regNumber} parkeras på plats {parkingPlace}");
+    logs.Add(log);
+    return log;
+}
 
+void DisplayLog()
+{
+    if (logs.Count == 0)
+    {
+        Console.WriteLine("Ingen historik finns ännu");
+        Console.ReadKey();
+    }
+    foreach (var log in logs)
+    {
+        Console.WriteLine(log);
+        Console.ReadKey();
+    }
 
+}
 
 
 
