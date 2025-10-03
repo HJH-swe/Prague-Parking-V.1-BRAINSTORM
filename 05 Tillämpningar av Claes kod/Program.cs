@@ -34,7 +34,8 @@ void MainMenu()
     Console.WriteLine("\t6) Historik/Logg");
     Console.WriteLine("\t7) Avsluta");
 
-    
+    Console.Write("\n\tVälj ett alternativ (1-7): "); // la till denna för gränssnittet
+
     // La till try-catch för att säkra upp koden
     try
     {
