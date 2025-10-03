@@ -19,10 +19,10 @@ for (int i = 0; i < parkingSpaces.Length; i++)
 }
 
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
-parkingSpaces[0] = "CAR#ABC123";
-parkingSpaces[1] = "MC#BBB222";
-parkingSpaces[2] = "MC#CCC333";
-parkingSpaces[3] = "MC#DDD444|MCEEE555";
+parkingSpaces[1] = "CAR#ABC123";
+parkingSpaces[2] = "MC#BBB222";
+parkingSpaces[3] = "MC#CCC333";
+parkingSpaces[4] = "MC#DDD444|MCEEE555";
 
 MatrixAllParkingSpaces();
 
@@ -87,7 +87,7 @@ void VisualRepresentationAllParkingSpaces()
 void MatrixAllParkingSpaces()
 {
     string[,] parkingMatrix = new string[10, 10];
-    int counter = 0; 
+    int counter = 1; 
 
     // Ska försöka lägga in strängarna från parkingSpaces i
     // ska ju börja på 1 egentligen
@@ -123,10 +123,9 @@ void MatrixAllParkingSpaces()
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(counter.ToString().PadLeft(4));
             }
-
-                //Console.Write(parkingMatrix[i, j].ToString().PadRight(10));
         }
         // Fick hjälp av co-pilot att placera CW .PadLeft
         Console.WriteLine();
     }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }
