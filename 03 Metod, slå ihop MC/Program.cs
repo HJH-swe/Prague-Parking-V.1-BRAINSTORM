@@ -13,11 +13,20 @@ string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P
 bool displayMenu = true;
 List<string> logs = new List<string>();     //skapar en lista för händelser
 
+for (int i = 0; i < parkingSpaces.Length; i++)
+{
+    parkingSpaces[i] = "x";
+}
+
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
 parkingSpaces[1] = "MC#BBB222";
 parkingSpaces[2] = "MC#CCC333";
 parkingSpaces[3] = "MC#DDD444|MCEEE555";
+
+MatrixAllParkingSpaces();
+
+Console.ReadKey();
 
 void MergeMC()
 {
@@ -38,5 +47,86 @@ void MergeMC()
             continue;
         }
 
+    }
+}
+
+//Kan komma på ett bättre namn sen
+void VisualRepresentationAllParkingSpaces()
+{
+    //Ska klura lite på en matris som visar hela parkeringen
+
+    // en 10 x 10 matris
+    int[,] parkingMatrix = new int[10, 10]
+    {
+        {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10 },
+        {11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
+        {21, 22, 23, 24, 25, 26, 27, 28, 29 , 30},
+        {31, 32, 33, 34, 35, 36, 37, 38, 39, 40 },
+        {41, 42, 43, 44, 45, 46, 47, 48, 49, 50 },
+        {51, 52, 53, 54, 55, 56, 57, 58, 59, 60 },
+        {61, 62, 63, 64, 65, 66, 67, 68, 69, 70 },
+        {71, 72, 73, 74, 75, 76, 77, 78, 79, 80 },
+        {81, 82, 83, 84, 85, 86, 87, 88, 89, 90 },
+        {91, 92, 93, 94, 95, 96, 97, 98, 99, 100 }
+    };
+
+    // Läste om nästlade for-loopar i matriser här: https://www.bytehide.com/blog/2d-arrays-csharp
+    // och lånade den mallen
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            // access matrix[i, j] here
+            Console.Write(parkingMatrix[i, j].ToString().PadLeft(4));
+        }
+        // Fick hjälp av co-pilot att placera CW rätt och PadLeft
+        Console.WriteLine();
+    }
+}
+
+void MatrixAllParkingSpaces()
+{
+    string[,] parkingMatrix = new string[10, 10];
+    int counter = 0; 
+
+    // Ska försöka lägga in strängarna från parkingSpaces i
+    // ska ju börja på 1 egentligen
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            // access matrix[i, j] here
+            parkingMatrix[i, j] = parkingSpaces[counter];
+            counter++;
+        }
+    }
+
+    counter = 0;
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            counter++;
+            // access matrix[i, j] here
+            if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains("|"))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(counter.ToString().PadLeft(4));
+            }
+            else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains("|")))
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write(counter.ToString().PadLeft(4));
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(counter.ToString().PadLeft(4));
+            }
+
+                //Console.Write(parkingMatrix[i, j].ToString().PadRight(10));
+        }
+        // Fick hjälp av co-pilot att placera CW .PadLeft
+        Console.WriteLine();
     }
 }
