@@ -15,14 +15,14 @@ List<string> logs = new List<string>();     //skapar en lista för händelser
 
 for (int i = 0; i < parkingSpaces.Length; i++)
 {
-    parkingSpaces[i] = "x";
+    parkingSpaces[i] = "";
 }
 
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
-parkingSpaces[0] = "CAR#ABC123";
-parkingSpaces[1] = "MC#BBB222";
-parkingSpaces[2] = "MC#CCC333";
-parkingSpaces[3] = "MC#DDD444|MCEEE555";
+parkingSpaces[1] = "CAR#ABC123";
+parkingSpaces[2] = "MC#BBB222";
+parkingSpaces[3] = "MC#CCC333";
+parkingSpaces[4] = "MC#DDD444|MCEEE555";
 
 MatrixAllParkingSpaces();
 
@@ -50,83 +50,51 @@ void MergeMC()
     }
 }
 
-//Kan komma på ett bättre namn sen
-void VisualRepresentationAllParkingSpaces()
-{
-    //Ska klura lite på en matris som visar hela parkeringen
-
-    // en 10 x 10 matris
-    int[,] parkingMatrix = new int[10, 10]
-    {
-        {1, 2, 3, 4, 5, 6, 7 ,8, 9, 10 },
-        {11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
-        {21, 22, 23, 24, 25, 26, 27, 28, 29 , 30},
-        {31, 32, 33, 34, 35, 36, 37, 38, 39, 40 },
-        {41, 42, 43, 44, 45, 46, 47, 48, 49, 50 },
-        {51, 52, 53, 54, 55, 56, 57, 58, 59, 60 },
-        {61, 62, 63, 64, 65, 66, 67, 68, 69, 70 },
-        {71, 72, 73, 74, 75, 76, 77, 78, 79, 80 },
-        {81, 82, 83, 84, 85, 86, 87, 88, 89, 90 },
-        {91, 92, 93, 94, 95, 96, 97, 98, 99, 100 }
-    };
-
-    // Läste om nästlade for-loopar i matriser här: https://www.bytehide.com/blog/2d-arrays-csharp
-    // och lånade den mallen
-    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
-    {
-        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
-        {
-            // access matrix[i, j] here
-            Console.Write(parkingMatrix[i, j].ToString().PadLeft(4));
-        }
-        // Fick hjälp av co-pilot att placera CW rätt och PadLeft
-        Console.WriteLine();
-    }
-}
 
 void MatrixAllParkingSpaces()
 {
     string[,] parkingMatrix = new string[10, 10];
-    int counter = 0; 
+    // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+    int counter = 1; 
 
-    // Ska försöka lägga in strängarna från parkingSpaces i
-    // ska ju börja på 1 egentligen
+    // Lägger in strängarna från vektorn parkingSpaces i matrisen
     for (int i = 0; i < parkingMatrix.GetLength(0); i++)
     {
         for (int j = 0; j < parkingMatrix.GetLength(1); j++)
         {
-            // access matrix[i, j] here
+            // Räknaren används som index på parkingSpaces - för att få strängarna på rätt plats [i, j]
             parkingMatrix[i, j] = parkingSpaces[counter];
             counter++;
         }
     }
 
-    counter = 0;
+    // Räknaren börjar på 1 (för att p-platserna börjar på 1)
+    counter = 1;
     for (int i = 0; i < parkingMatrix.GetLength(0); i++)
     {
         for (int j = 0; j < parkingMatrix.GetLength(1); j++)
         {
-            counter++;
-            // access matrix[i, j] here
+            // OM det står en bil eller två mc på platsen --> upptagen
             if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains("|"))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(counter.ToString().PadLeft(4));
+                Console.Write(counter.ToString().PadLeft(4));         // Co-pilot föreslog .PadLeft för snygg formatering
             }
+            // ANNARS OM det står en mc på platsen --> halvt upptagen
             else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains("|")))
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write(counter.ToString().PadLeft(4));
             }
+            // ANNARS: ingen bil eller mc på platsen --> tom
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.Write(counter.ToString().PadLeft(4));
             }
-
-                //Console.Write(parkingMatrix[i, j].ToString().PadRight(10));
+            counter++;
         }
-        // Fick hjälp av co-pilot att placera CW .PadLeft
         Console.WriteLine();
     }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }

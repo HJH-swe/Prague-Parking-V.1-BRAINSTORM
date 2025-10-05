@@ -111,6 +111,10 @@ void RegisterParking()
     Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
     // Gjorde om till knappalternativ, så användaren inte skriver "bil", "car", eller nåt annat själv
     vehicleType = VehicleType();
+
+    // HJH: Ska vi lägga in kod som förhindrar att regnumret blir för långt?
+    // Eller inte består av bokstäver och siffror?
+    // "Registreringsnummer är alltid strängar med maxlängd 10 tecken." (pdf:en med uppiften)
     Console.Write("\nAnge registreringsnummer: ");
     regNumber = Console.ReadLine().ToUpper();
 
@@ -154,7 +158,6 @@ void RegisterParking()
                 return;
             }
         }
-
     }
     Console.WriteLine("Ingen ledig plats hittades");
 }
@@ -177,18 +180,17 @@ static string VehicleType()
                 return "MC";
 
             default:
+                Console.Clear();
                 Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");     
                 return VehicleType();
         }
     }
     catch
     {
-
+        Console.Clear();
         Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");
         return VehicleType();
     }
-    
-    
 }
 
 
