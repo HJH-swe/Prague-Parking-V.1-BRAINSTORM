@@ -3,7 +3,7 @@
 
 string vehicleType;
 string regNumber;
-string typeDivider = "#";
+string typeDivider = "#";       // HJH Kanske ska byta namn till något mer beskrivande?
 string mcDivider = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
@@ -114,7 +114,7 @@ void RegisterParking()
 
     // HJH: Ska vi lägga in kod som förhindrar att regnumret blir för långt?
     // Eller inte består av bokstäver och siffror?
-    // "Registreringsnummer är alltid strängar med maxlängd 10 tecken." (pdf:en med uppiften)
+    // "Registreringsnummer är alltid strängar med maxlängd 10 tecken." (pdf:en med uppgiften)
     Console.Write("\nAnge registreringsnummer: ");
     regNumber = Console.ReadLine().ToUpper();
 
@@ -127,12 +127,18 @@ void RegisterParking()
                 parkingSpaces[i].StartsWith("MC#")
                 && !parkingSpaces[i].Contains("|"))
             {
-                parkingSpaces[i] += vehicleType + typeDivider + regNumber; //lägger till += (parkingSpacec[i]) för att inte skriva över befintligt värde
+                                                                          //HJH la till mcDivider så att inte alla mc parkeras ihop
+                parkingSpaces[i] += vehicleType + typeDivider + regNumber + mcDivider; //lägger till += (parkingSpacec[i]) för att inte skriva över befintligt värde
                 Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
                 SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
                 return;
             }
         }
+        // HJH: Ser ut som en bra lösning för att flytta ihop mc!
+        // Testkörde programmet lite och då blev det knas med utskrifterna.
+        // Kanske kan jobba på det i veckan?
+
+
         for (int i = 1; i < parkingSpaces.Length; i++) //om det inte finns en halvtom-plats så kontrolleras om det finns en ledig plats
         {
             if (string.IsNullOrEmpty(parkingSpaces[i]))
@@ -272,7 +278,8 @@ string SaveLog(string vehicleType, string typeDivider, string regNumber, int par
 }
 
 
-void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten? 
+void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten?
+                  //HJH: Låter smart! Kanske kan visa loggen unden den visuella representationen av hela parkeringen? 
 {
     if (logs.Count == 0)
     {
