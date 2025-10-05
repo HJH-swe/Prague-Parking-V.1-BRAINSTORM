@@ -11,7 +11,7 @@ string typeDivider = "#";
 string mcDivider = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
-List<string> logs = new List<string>();     //skapar en lista för händelser
+//List<string> logs = new List<string>();     //skapar en lista för händelser
 
 for (int i = 0; i < parkingSpaces.Length; i++)
 {
@@ -34,7 +34,7 @@ void MergeMC()
     {
         // OM det står en mc på platsen, men ingen mcDivider
         // --> då står det 1 mc på platsen, inte 2
-        if (parkingSpaces[i].Contains("MC") && !(parkingSpaces[i].Contains("|")))     
+        if (parkingSpaces[i].Contains("MC") && !(parkingSpaces[i].Contains('|')))     
         {
             Console.WriteLine(parkingSpaces[i]); //Skriver ut alla mc som står själva
             // Här borde vara kod för att slå ihop dem. Ska fundera på det sen.
@@ -75,13 +75,13 @@ void MatrixAllParkingSpaces()
         for (int j = 0; j < parkingMatrix.GetLength(1); j++)
         {
             // OM det står en bil eller två mc på platsen --> upptagen
-            if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains("|"))
+            if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Write(counter.ToString().PadLeft(4));         // Co-pilot föreslog .PadLeft för snygg formatering
             }
             // ANNARS OM det står en mc på platsen --> halvt upptagen
-            else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains("|")))
+            else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write(counter.ToString().PadLeft(4));

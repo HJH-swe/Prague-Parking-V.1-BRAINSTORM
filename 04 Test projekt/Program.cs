@@ -3,10 +3,10 @@
 string[] ParkingGarage = new string[101];
 
 Console.Write("Ange fordonstyp: ");
-string fordonsTyp = Console.ReadLine();
+string? fordonsTyp = Console.ReadLine();
 
 Console.Write("Ange registreringsnummer : ");
-string regNumber = Console.ReadLine();
+string? regNumber = Console.ReadLine();
 
 
 bool displayMenu = true;
@@ -214,7 +214,7 @@ Parkeringsplats:
    0, 1 eller 2 MC-plats
 */
 
-
+/*
 string fordonsTyp = "CAR";
 
 string skiljetecken = "#";
@@ -250,3 +250,4 @@ string HämtaPRuta(string[] PHus, int platsNummer)
     string[] temp = PHus[platsNummer].Split('#');
     return String.Format("Plats nummer: {0} innehåller fordonstyp: {1} med registreringsnummer: {2}", platsNummer, temp[0], temp[1]);
 }
+*/
