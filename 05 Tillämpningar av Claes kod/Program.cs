@@ -1,7 +1,7 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
 string vehicleType;
 string regNumber;
-string typeDivider = "#";
+string typeDivider = "#";       // HJH Kanske ska byta namn till något mer beskrivande?
 string mcDivider = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
@@ -113,18 +113,8 @@ void RegisterParking()
     // HJH: Ska vi lägga in kod som förhindrar att regnumret blir för långt?
     // Eller inte består av bokstäver och siffror?
     // "Registreringsnummer är alltid strängar med maxlängd 10 tecken." (pdf:en med uppiften)
-    //Deklarerar en sträng variabel för att kontroller om inmatningen är ett tomt värde, eller fler än 10 tecken.
-    string input;
-    do
-    {
-        Console.Write("\nAnge registreringsnummer: ");
-        input = Console.ReadLine();
-        if (string.IsNullOrEmpty(input) || input.Length > 10)
-        {
-            Console.WriteLine("Regisreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
-        }
-    }
-    while (string.IsNullOrEmpty(input) || input.Length > 10);
+    Console.Write("\nAnge registreringsnummer: ");
+    regNumber = Console.ReadLine().ToUpper();
 
     regNumber = input.ToUpper();
 
@@ -141,20 +131,22 @@ void RegisterParking()
                 parkingSpaces[i].StartsWith("MC#")
                 && !parkingSpaces[i].Contains("|"))
             {
-                parkingIndex = i;
-                break;
+                parkingSpaces[i] += vehicleType + typeDivider + regNumber; //lägger till += (parkingSpacec[i]) för att inte skriva över befintligt värde
+                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+                SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
+                return;
             }
         }
-        if (parkingIndex == -1)
-
-            for (int i = 1; i < parkingSpaces.Length; i++) //om det inte finns en halvtom-plats så kontrolleras om det finns en ledig plats
+        for (int i = 1; i < parkingSpaces.Length; i++) //om det inte finns en halvtom-plats så kontrolleras om det finns en ledig plats
+        {
+            if (string.IsNullOrEmpty(parkingSpaces[i]))
             {
-                if (string.IsNullOrEmpty(parkingSpaces[i]))
-                {
-                    parkingIndex = i;
-                    break;
-                }
+                parkingSpaces[i] = vehicleType + typeDivider + regNumber;
+                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+                SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
+                return;
             }
+        }
     }
     else //Om en bil regisreras
     {
@@ -290,26 +282,20 @@ string PrintParkingSpaceInfo(int index)
 //metod för att lägga till en parkering
 
 
-   void AssignVehicleToParking(string vehicleType, string regNumber, int parkingIndex)
+void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten? 
+{
+    if (logs.Count == 0)
     {
-        if (vehicleType == "MC")
-        {
-            if (string.IsNullOrEmpty(parkingSpaces[parkingIndex]))
-            {
-                parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
-            }
-            else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDivider))
-            {
-                parkingSpaces[parkingIndex] += mcDivider + vehicleType + typeDivider + regNumber;
-            }
-            // Annars: platsen är full för MC
-        }
-        else // CAR
-        {
-            parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
-        }
-        PrintParkingSpaceInfo(parkingIndex);
+        Console.WriteLine("Ingen historik finns ännu");
+        Console.ReadKey();
+        return;
     }
+    foreach (var log in logs)
+    {
+        Console.WriteLine(log);
+    }
+    Console.ReadKey();
+}
 
 
 //kommenterar på denna tillsvidare då den ej behövs
