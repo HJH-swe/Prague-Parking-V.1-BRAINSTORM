@@ -30,8 +30,8 @@ void MainMenu()
     Console.WriteLine("\t2) Sök fordon");
     Console.WriteLine("\t3) Flytta fordon");
     Console.WriteLine("\t4) Checka ut fordon");
-    Console.WriteLine("\t5) Översikt parkering");
-    Console.WriteLine("\t6) Historik/Logg");
+    Console.WriteLine("\t5) Översikt parkering"); 
+    Console.WriteLine("\t6) Logg");//lägger in DisplayLog(); för att kunna testa om registreras korrekt - kan ta bort detta menyval sen
     Console.WriteLine("\t7) Avsluta");
 
     Console.Write("\n\tVälj ett alternativ (1-7): "); // la till denna för gränssnittet
@@ -105,7 +105,6 @@ void MainMenu()
 
 }
 
-
 //Registrera parkering:
 void RegisterParking()
 {
@@ -115,18 +114,51 @@ void RegisterParking()
     Console.Write("\nAnge registreringsnummer: ");
     regNumber = Console.ReadLine().ToUpper();
 
-    for (int i = 1; i < parkingSpaces.Length; i++)
+    if (vehicleType == "MC") //Om MC: kolla först om det finns en ledig plats bredvid en MC 
     {
-        if (parkingSpaces[i] == null || parkingSpaces[i] == "")     // la till == "". När vi tar bort bilar blir nog värdet ""
+        for (int i = 1; i < parkingSpaces.Length; i++)
+        //loopar igenom parkingSpace-arrayen tills och kollar om det finns en plats som inte är tom, och som börjar på "MC" och inte innehåller tecknet '|'
         {
-            parkingSpaces[i] = vehicleType + typeDivider + regNumber;
-            Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
-            SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
-            return;
+            if (!string.IsNullOrEmpty(parkingSpaces[i]) &&
+                parkingSpaces[i].StartsWith("MC#")
+                && !parkingSpaces[i].Contains("|"))
+            {
+                parkingSpaces[i] += vehicleType + typeDivider + regNumber; //lägger till += (parkingSpacec[i]) för att inte skriva över befintligt värde
+                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+                SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
+                return;
+            }
+        }
+        for (int i = 1; i < parkingSpaces.Length; i++) //om det inte finns en halvtom-plats så kontrolleras om det finns en ledig plats
+        {
+            if (string.IsNullOrEmpty(parkingSpaces[i]))
+            {
+                parkingSpaces[i] = vehicleType + typeDivider + regNumber;
+                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+                SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
+                return;
+            }
+        }
+    }
+    else //Om en bil regisreras
+    {
+        for (int i = 1; i < parkingSpaces.Length; i++)
+        {
+
+
+            if (string.IsNullOrEmpty(parkingSpaces[i]))
+            {
+                parkingSpaces[i] = vehicleType + typeDivider + regNumber;
+                Console.WriteLine($"Fordon: {vehicleType}{typeDivider}{regNumber} parkeras på plats: {i} ");
+                SaveLog(vehicleType, typeDivider, regNumber, i, DateTime.Now);
+                return;
+            }
         }
 
     }
+    Console.WriteLine("Ingen ledig plats hittades");
 }
+
 
 static string VehicleType()
 {
@@ -237,19 +269,20 @@ string SaveLog(string vehicleType, string typeDivider, string regNumber, int par
     return log;
 }
 
-void DisplayLog()
+
+void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten? 
 {
     if (logs.Count == 0)
     {
         Console.WriteLine("Ingen historik finns ännu");
         Console.ReadKey();
+        return;
     }
     foreach (var log in logs)
     {
         Console.WriteLine(log);
-        Console.ReadKey();
     }
-
+    Console.ReadKey();
 }
 
 
