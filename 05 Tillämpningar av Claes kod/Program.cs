@@ -155,7 +155,7 @@ void RegisterParking(string? vehicleType)
                 }
         }
     }
-    else //Om en bil regisreras
+    else //Om en bil registreras
     {
         for (int i = 1; i < parkingSpaces.Length; i++)
         {
@@ -216,7 +216,7 @@ static string? VehicleType()
     }
 }
 
-//Metod för att söka efter forson
+//Metod för att söka efter fordon
 void SearchVehicle(string searchNumber)
 {
     bool vehicleFound = false;
@@ -258,7 +258,8 @@ string PrintParkingSpaceInfo(int index)
         string[] splitMC = parkingSpaces[index].Split('|');
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
-        return String.Format($"Plats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp0[0]}#{temp0[1]}"); //la till mcDelimiter
+        return String.Format($"Plats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
+                                                                                                           // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen, står det ett fordon på platsen
     else
