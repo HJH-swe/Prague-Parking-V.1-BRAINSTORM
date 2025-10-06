@@ -19,12 +19,13 @@ for (int i = 0; i < parkingSpaces.Length; i++)
 }
 
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
+parkingSpaces[0] = "CAR#00000";
 parkingSpaces[1] = "CAR#ABC123";
 parkingSpaces[2] = "MC#BBB222";
 parkingSpaces[3] = "MC#CCC333";
 parkingSpaces[4] = "MC#DDD444|MCEEE555";
 
-MatrixAllParkingSpaces();
+VisualAllParkingSpaces();
 
 Console.ReadKey();
 
@@ -51,7 +52,7 @@ void MergeMC()
 }
 
 
-void MatrixAllParkingSpaces()
+void VisualAllParkingSpaces()
 {
     string[,] parkingMatrix = new string[10, 10];
     // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)

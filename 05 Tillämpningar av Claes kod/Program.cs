@@ -1,8 +1,8 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
 string? vehicleType;
 string regNumber;
-string typeDivider = "#";       // HJH Kanske ska byta namn till något mer beskrivande? - vehicleSepator? /SR
-string mcDivider = "|";
+string delimiter = "#";       
+string mcDelimiter = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
@@ -16,11 +16,10 @@ do
 }
 while (displayMenu);
 
-//Meny - koperiat in Susannes meny
 void MainMenu()
 {
     Console.Clear();
-    Console.WriteLine("\t~ Prague Parking ~\n");
+    Console.WriteLine("\t~~ PRAGUE PARKING ~~\n");
 
     Console.WriteLine("\t1) Registrera parkering");
     Console.WriteLine("\t2) Sök fordon");
@@ -29,9 +28,9 @@ void MainMenu()
     Console.WriteLine("\t5) Översikt parkering");
     Console.WriteLine("\t6) Avsluta");
 
-    Console.Write("\n\tVälj ett alternativ (1-6): "); // la till denna för gränssnittet
+    Console.Write("\n\tVälj ett alternativ (1-6): "); 
 
-    // La till try-catch för att säkra upp koden
+    // Använder try-catch för att säkra upp koden
 
     try
     {
@@ -46,8 +45,11 @@ void MainMenu()
                     vehicleType = VehicleType();
                     if (vehicleType == null)
                     {
-                        Console.WriteLine("\tÅtergår till huvudmenyn..");
+                        Console.WriteLine("\tÅtergår till huvudmenyn...");  // HJH: Behöver vi skriva ut det här?
+                                                                            // Jag tycker nog det räcker att programmet går till huvudmenyn.
                         Console.ReadLine();
+                        //Thread.Sleep(1000);                                 // Ett alternativ till console.readline
+                                                                            // -> går vidare automatiskt efter 1 sekund
                         break;
                     }
                     RegisterParking(vehicleType);
@@ -66,6 +68,7 @@ void MainMenu()
             case 3:
                 {
                     Console.Clear();
+                    Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
                     MoveVehicle();
                     break;
                 }
@@ -86,13 +89,14 @@ void MainMenu()
             case 6:
                 {
                     Console.WriteLine("\nProgrammet avslutas...\n\n");
+                    Thread.Sleep(1000); // HJH: La in en liten paus innan programmet stängs
                     displayMenu = false;
                     break;
                 }
             default:
                 {
                     Console.Clear();
-                    Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-7");
+                    Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-6");
                     Console.ReadKey();
                     break;
                 }
@@ -178,7 +182,7 @@ void RegisterParking(string? vehicleType)
 //Metod för att menyval vid registrering av fordon
 static string? VehicleType()
 {
-    Console.WriteLine("\n\t[1] Bil\n\t[2] MC \n\t[3] Återgår till huvudmeny");
+    Console.WriteLine("\n\t[1] Bil\n\t[2] MC \n\t[3] Återgå till huvudmenyn");
     Console.Write("\n\tVälj fordonstyp: ");
 
     try
@@ -254,7 +258,7 @@ string PrintParkingSpaceInfo(int index)
         string[] splitMC = parkingSpaces[index].Split('|');
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
-        return String.Format($"Plats {index}: {temp0[0]}#{temp0[1]} {mcDivider} {temp0[0]}#{temp0[1]}"); //la till mcDivider
+        return String.Format($"Plats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp0[0]}#{temp0[1]}"); //la till mcDelimiter
     }
     // Om det inte står 2 MC på platsen, står det ett fordon på platsen
     else
@@ -272,17 +276,17 @@ void AssignVehicleToParking(string vehicleType, string regNumber, int parkingInd
     {
         if (string.IsNullOrEmpty(parkingSpaces[parkingIndex]))
         {
-            parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
+            parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
         }
-        else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDivider))
+        else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDelimiter))
         {
-            parkingSpaces[parkingIndex] += mcDivider + vehicleType + typeDivider + regNumber;
+            parkingSpaces[parkingIndex] += mcDelimiter + vehicleType + delimiter + regNumber;
         }
         // Annars: platsen är full för MC
     }
     else // CAR
     {
-        parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
+        parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
     }
 }
 void DisplayParking()
@@ -320,17 +324,17 @@ void DisplayParking()
         {
             if (string.IsNullOrEmpty(parkingSpaces[parkingIndex]))
             {
-                parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
+                parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
             }
-            else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDivider))
+            else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDelimiter))
             {
-                parkingSpaces[parkingIndex] += mcDivider + vehicleType + typeDivider + regNumber;
+                parkingSpaces[parkingIndex] += mcDelimiter + vehicleType + delimiter + regNumber;
             }
             // Annars: platsen är full för MC
         }
         else // CAR
         {
-            parkingSpaces[parkingIndex] = vehicleType + typeDivider + regNumber;
+            parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
         }
         PrintParkingSpaceInfo(parkingIndex);
     }
