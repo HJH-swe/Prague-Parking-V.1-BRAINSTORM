@@ -203,7 +203,7 @@ static string? VehicleType()
             default:
                 {
                     Console.Clear();
-                    Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");
+                    Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
                     return VehicleType();
                 }
         }
@@ -211,7 +211,7 @@ static string? VehicleType()
     catch
     {
         Console.Clear();
-        Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, eller [2] för MC.\n");
+        Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
         return VehicleType();
     }
 }
@@ -220,12 +220,14 @@ static string? VehicleType()
 void SearchVehicle(string searchNumber)
 {
     bool vehicleFound = false;
+    bool emptyParking = true;
 
-    //bör vi ha ett felmeddelande där det står att det inte finns några parkerade fordon om det är 0 parkerade fordon? /SR
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
-        if (parkingSpaces[i] != null && parkingSpaces[i] != "")     // Om värdet inte är null eller "" står det ett fordon på p-platsen
+        // Om värdet inte är null eller "" står det ett fordon på p-platsen (och parkeringen är inte tom)
+        if (parkingSpaces[i] != null && parkingSpaces[i] != "")     
         {
+            emptyParking = false;
             if (parkingSpaces[i].Contains(searchNumber))
             {
                 // Om fordonet hittades ska info skrivas ut
@@ -234,9 +236,15 @@ void SearchVehicle(string searchNumber)
             }
         }
     }
+    // HJH: La in felmeddelande om parkeringen är tom (SR förslag). 
+    // Man måste ändå skriva in ett regnummer att söka på (görs innan metoden). Inte jättesnyggt, men duger?
+    if (emptyParking)
+    {
+        Console.WriteLine("\n\nDet finns inga parkerade fordon.");
+    }
 
-    // Om fordonet fortfarande inte hittats efter for-loopen
-    if (!vehicleFound)
+    // Om fordonet fortfarande inte hittats efter for-loopen och parkeringen inte är tom
+    if (!vehicleFound && !emptyParking)
     {
         Console.WriteLine("\n\nFordonet hittades inte. \nKontrollera registreringsnumret och sök igen.");
     }
@@ -261,7 +269,7 @@ string PrintParkingSpaceInfo(int index)
         return String.Format($"Plats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
                                                                                                            // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
-    // Om det inte står 2 MC på platsen, står det ett fordon på platsen
+    // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
     else
     {
         string[] temp = parkingSpaces[index].Split('#');
