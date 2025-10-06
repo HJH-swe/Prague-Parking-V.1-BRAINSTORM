@@ -58,11 +58,26 @@ void MainMenu()
                 }
             case 2:
                 {
+                    // HJH: Uppdaterade sökfunktionen, la till att man måste skriva in ett regnummer att söka på.
+                    // Men koden är lite stökig. Är uppdateringen onödig? Ska vi ta bort?
+                    bool validSearch = false;
                     Console.Clear();
                     Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-                    Console.WriteLine("Skriv in fordonets registreringsnummer:");
-                    string searchRegNumber = Console.ReadLine().ToUpper();
-                    SearchVehicle(searchRegNumber);
+                    do 
+                    {
+                        Console.WriteLine("\nSkriv in fordonets registreringsnummer:");
+                        string searchRegNumber = Console.ReadLine().ToUpper();
+                        if (searchRegNumber.Length == 0 || searchRegNumber.Length > 10)
+                        {
+                            Console.WriteLine("\n\nOgiltigt registreringsnummer. \nKontrollera registreringsnumret och sök igen.");
+                        }
+                        else
+                        {
+                            validSearch = true;
+                            SearchVehicle(searchRegNumber);
+                        }
+                    }
+                    while(!validSearch);
                     break;
                 }
             case 3:
@@ -121,7 +136,7 @@ void RegisterParking(string? vehicleType)
         input = Console.ReadLine();
         if (string.IsNullOrEmpty(input) || input.Length > 10)
         {
-            Console.WriteLine("Regisreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
+            Console.WriteLine("Registreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
         }
     }
     while (string.IsNullOrEmpty(input) || input.Length > 10);
