@@ -267,9 +267,105 @@ void SearchVehicle(string searchNumber)
 }
 
 //Metod för att flytta fordon
-void MoveVehicle()
+using System;
+
+class Program
 {
-// HJH: Man borde kunna använda SearchVehicle
+    static string[] parkingGarage = new string[100];
+
+    static void Main(string[] args)
+    {
+        // Exempeldata
+        parkingGarage[0] = "CAR#ABC123";       // Plats 1
+        parkingGarage[5] = "MC#XYZ789";        // Plats 6
+        parkingGarage[10] = "MC#LMN456";       // Plats 11
+
+        PrintGarage();
+
+        MoveVehicle(6, 11);   // Flytta MC från plats 6 → 11 (blir 2 MC på plats 11)
+        MoveVehicle(1, 20);   // Flytta bil från plats 1 → 20
+
+        PrintGarage();
+    }
+
+    /// <summary>
+    /// Flyttar ett fordon från en plats till en annan.
+    /// Hanterar regler för bil/MC/2 MC.
+    /// </summary>
+    static void MoveVehicle(int fromSpot, int toSpot)
+    {
+        int fromIndex = fromSpot - 1;
+        int toIndex = toSpot - 1;
+
+        if (!IsValidIndex(fromIndex) || !IsValidIndex(toIndex))
+        {
+            Console.WriteLine(" Ogiltigt platsnummer!");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(parkingGarage[fromIndex]))
+        {
+            Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
+            return;
+        }
+
+        string vehicleToMove = parkingGarage[fromIndex];
+        string[] vehiclesAtFrom = vehicleToMove.Split('|');
+
+        if (vehiclesAtFrom.Length > 1)
+        {
+            Console.WriteLine($" Plats {fromSpot} innehåller flera fordon. Specificera vilket du vill flytta.");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(parkingGarage[toIndex]))
+        {
+            // Målruta tom → flytta direkt
+            parkingGarage[toIndex] = vehicleToMove;
+            parkingGarage[fromIndex] = null;
+            Console.WriteLine($" Fordon flyttades från plats {fromSpot} till {toSpot}.");
+        }
+        else
+        {
+            string[] vehiclesAtTo = parkingGarage[toIndex].Split('|');
+
+            // Fall: Bil finns på målrutan → inte tillåtet
+            if (parkingGarage[toIndex].Contains("CAR"))
+            {
+                Console.WriteLine($" Kan inte flytta till plats {toSpot}, bil upptar platsen.");
+                return;
+            }
+
+            // Fall: MC finns på målrutan → kolla om det redan är två MC
+            if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
+            {
+                // Flytta MC och kombinera
+                parkingGarage[toIndex] = parkingGarage[toIndex] + "|" + vehicleToMove;
+                parkingGarage[fromIndex] = null;
+                Console.WriteLine($" MC flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
+            }
+            else
+            {
+                Console.WriteLine($" Plats {toSpot} är redan full.");
+            }
+        }
+    }
+
+    static bool IsValidIndex(int index)
+    {
+        return index >= 0 && index < parkingGarage.Length;
+    }
+
+    static void PrintGarage()
+    {
+        Console.WriteLine("\n--- Parkeringsstatus ---");
+        for (int i = 0; i < parkingGarage.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(parkingGarage[i]))
+                Console.WriteLine($"Plats {i + 1}: {parkingGarage[i]}");
+        }
+        Console.WriteLine("------------------------\n");
+    }
 }
 
 //Metod som skriver ut info om p-plats (t.ex. om det står 2 mc eller ett fordon på platsen)
