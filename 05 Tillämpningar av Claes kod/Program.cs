@@ -85,7 +85,7 @@ void MainMenu()
                     Console.Clear();
                     Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
                     // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
-                    MoveVehicle();
+                    MoveVehicle(1, 2);
                     break;
                 }
             case 4:
