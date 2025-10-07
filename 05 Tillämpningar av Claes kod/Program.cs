@@ -92,6 +92,7 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
+                    CheckaOut("ABC123", parkingSpaces);
                     //CheckoutVehicle();
                     break;
                 }
@@ -267,6 +268,23 @@ void SearchVehicle(string searchNumber)
     Console.ReadKey();
 }
 
+
+/* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
+
+string CheckaOut(string regNumber, string[] parkingSpaces)
+{
+    for (int i = 1; i < parkingSpaces.Length; i++)
+    {
+        if (parkingSpaces[i].Contains(regNumber))
+        {
+            parkingSpaces[i] = null; // tar bort bilen
+            return $"Fordon {regNumber} har checkats ut från plats {i}.";
+        }
+    }
+    return $"Inget fordon med regnr {regNumber} hittades.";
+}
+
+
 //Metod för att flytta fordon
 
 /* HJH: Kommenterar bort lite kod som inte behövs i början
@@ -292,11 +310,12 @@ class Program
         PrintGarage();
     }
     */
-    /// <summary>
-    /// Flyttar ett fordon från en plats till en annan.
-    /// Hanterar regler för bil/MC/2 MC.
-    /// </summary>
-    /*static*/ void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan man använda samma variabler som finns i hela programmet,
+/// <summary>
+/// Flyttar ett fordon från en plats till en annan.
+/// Hanterar regler för bil/MC/2 MC.
+/// </summary>
+/*static*/
+void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan man använda samma variabler som finns i hela programmet,
                                                           // t. ex. parkingSpaces[]
     {
         // HJH: Behöver nog inte göra - 1.
