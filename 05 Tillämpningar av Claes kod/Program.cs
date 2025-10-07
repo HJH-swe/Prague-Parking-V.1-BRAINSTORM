@@ -272,12 +272,21 @@ void SearchVehicle(string searchNumber)
 
 /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
 
+// String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
+// --> string1 = MC#ABC123  string2 = MC#CDE456
+
 string CheckaOut(string regNumber, string[] parkingSpaces)
 {
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i].Contains(regNumber))
         {
+            // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
+                // Kod som bara tar bort rätt fordon
+                // Splitta strängen och ta bort rätt del
+
+            // ANNARS (då står det bara ett fordon på platsen)
+                // kod som nollställer platsen
             parkingSpaces[i] = null; // tar bort bilen
             return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
@@ -288,29 +297,6 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
 
 //Metod för att flytta fordon
 
-/* HJH: Kommenterar bort lite kod som inte behövs i början
- * 
-using System;
-
-class Program
-{
-    static string[] parkingGarage = new string[100];
-
-    static void Main(string[] args)
-    {
-        // Exempeldata
-        parkingGarage[0] = "CAR#ABC123";       // Plats 1
-        parkingGarage[5] = "MC#XYZ789";        // Plats 6
-        parkingGarage[10] = "MC#LMN456";       // Plats 11
-
-        PrintGarage();
-
-        MoveVehicle(6, 11);   // Flytta MC från plats 6 → 11 (blir 2 MC på plats 11)
-        MoveVehicle(1, 20);   // Flytta bil från plats 1 → 20
-
-        PrintGarage();
-    }
-    */
 /// <summary>
 /// Flyttar ett fordon från en plats till en annan.
 /// Hanterar regler för bil/MC/2 MC.
@@ -395,15 +381,14 @@ void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan ma
         }
         Console.WriteLine("------------------------\n");
     }
-/*}*/
 
 //Metod som skriver ut info om p-plats (t.ex. om det står 2 mc eller ett fordon på platsen)
 string PrintParkingSpaceInfo(int index)
 {
     //Om det står 2 MC på platsen kommer det finnas | i strängen
     if (parkingSpaces[index].Contains('|'))
-    {
-        string[] splitMC = parkingSpaces[index].Split('|');
+    {                                                       
+        string[] splitMC = parkingSpaces[index].Split('|'); 
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
         return String.Format($"Plats {index}: {temp0[0]}{temp0[1]} {mcDelimiter} {temp1[0]}{temp1[1]}"); //la till mcDelimiter
