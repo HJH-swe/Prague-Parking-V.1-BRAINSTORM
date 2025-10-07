@@ -253,7 +253,7 @@ void SearchVehicle(string searchNumber)
         }
     }
     // HJH: La in felmeddelande om parkeringen är tom (SR förslag). 
-    // Man måste ändå skriva in ett regnummer att söka på (görs innan metoden). Inte jättesnyggt, men duger?
+    // Man måste ändå skriva in ett regnummer att söka på (görs innan metoden). Inte jättesnyggt, men kanske duger?
     if (emptyParking)
     {
         Console.WriteLine("\n\nDet finns inga parkerade fordon.");
