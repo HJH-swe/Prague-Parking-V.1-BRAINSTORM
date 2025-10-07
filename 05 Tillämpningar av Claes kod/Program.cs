@@ -48,7 +48,7 @@ void MainMenu()
                         Console.WriteLine("\tÅtergår till huvudmenyn...");  // HJH: Behöver vi skriva ut det här?
                                                                             // Jag tycker nog det räcker att programmet går till huvudmenyn.
                         Console.ReadLine();
-                        //Thread.Sleep(1000);                                 // Ett alternativ till console.readline
+                        //Thread.Sleep(1000);                               // Ett alternativ till console.readline
                                                                             // -> går vidare automatiskt efter 1 sekund
                         break;
                     }
@@ -84,6 +84,7 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
+                    // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
                     MoveVehicle();
                     break;
                 }
@@ -267,6 +268,9 @@ void SearchVehicle(string searchNumber)
 }
 
 //Metod för att flytta fordon
+
+/* HJH: Kommenterar bort lite kod som inte behövs i början
+ * 
 using System;
 
 class Program
@@ -287,13 +291,16 @@ class Program
 
         PrintGarage();
     }
-
+    */
     /// <summary>
     /// Flyttar ett fordon från en plats till en annan.
     /// Hanterar regler för bil/MC/2 MC.
     /// </summary>
-    static void MoveVehicle(int fromSpot, int toSpot)
+    /*static*/ void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan man använda samma variabler som finns i hela programmet,
+                                                          // t. ex. parkingSpaces[]
     {
+        // HJH: Behöver nog inte göra - 1.
+        // Vår vektor går från 0-100, men vi använder inte plats 0 (i loopar osv). Så alla index borde representera rätt p-plats
         int fromIndex = fromSpot - 1;
         int toIndex = toSpot - 1;
 
@@ -303,13 +310,13 @@ class Program
             return;
         }
 
-        if (string.IsNullOrEmpty(parkingGarage[fromIndex]))
+        if (string.IsNullOrEmpty(parkingSpaces[fromIndex])) // HJH: Bytte namn från parkingGarage[] till parkingSpaces[] (även nedanför)
         {
             Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
             return;
         }
 
-        string vehicleToMove = parkingGarage[fromIndex];
+        string vehicleToMove = parkingSpaces[fromIndex];
         string[] vehiclesAtFrom = vehicleToMove.Split('|');
 
         if (vehiclesAtFrom.Length > 1)
@@ -318,19 +325,20 @@ class Program
             return;
         }
 
-        if (string.IsNullOrEmpty(parkingGarage[toIndex]))
+        if (string.IsNullOrEmpty(parkingSpaces[toIndex]))
         {
             // Målruta tom → flytta direkt
-            parkingGarage[toIndex] = vehicleToMove;
-            parkingGarage[fromIndex] = null;
-            Console.WriteLine($" Fordon flyttades från plats {fromSpot} till {toSpot}.");
+            parkingSpaces[toIndex] = vehicleToMove;
+            parkingSpaces[fromIndex] = null;
+            Console.WriteLine($" Fordon flyttades från plats {fromSpot} till {toSpot}."); // HJH: Måste lägga in kod (console.readline eller console.readkey)
+                                                                                          // för att hinna läsa såna här meddelanden
         }
         else
         {
-            string[] vehiclesAtTo = parkingGarage[toIndex].Split('|');
+            string[] vehiclesAtTo = parkingSpaces[toIndex].Split('|');
 
             // Fall: Bil finns på målrutan → inte tillåtet
-            if (parkingGarage[toIndex].Contains("CAR"))
+            if (parkingSpaces[toIndex].Contains("CAR"))
             {
                 Console.WriteLine($" Kan inte flytta till plats {toSpot}, bil upptar platsen.");
                 return;
@@ -340,8 +348,8 @@ class Program
             if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
             {
                 // Flytta MC och kombinera
-                parkingGarage[toIndex] = parkingGarage[toIndex] + "|" + vehicleToMove;
-                parkingGarage[fromIndex] = null;
+                parkingSpaces[toIndex] = parkingSpaces[toIndex] + "|" + vehicleToMove;
+                parkingSpaces[fromIndex] = null;
                 Console.WriteLine($" MC flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
             }
             else
@@ -351,22 +359,22 @@ class Program
         }
     }
 
-    static bool IsValidIndex(int index)
+   /* static*/ bool IsValidIndex(int index)
     {
-        return index >= 0 && index < parkingGarage.Length;
+        return index >= 0 && index < parkingSpaces.Length;
     }
 
-    static void PrintGarage()
+    /*static*/ void PrintGarage()
     {
         Console.WriteLine("\n--- Parkeringsstatus ---");
-        for (int i = 0; i < parkingGarage.Length; i++)
+        for (int i = 0; i < parkingSpaces.Length; i++)
         {
-            if (!string.IsNullOrEmpty(parkingGarage[i]))
-                Console.WriteLine($"Plats {i + 1}: {parkingGarage[i]}");
+            if (!string.IsNullOrEmpty(parkingSpaces[i]))
+                Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
         }
         Console.WriteLine("------------------------\n");
     }
-}
+/*}*/
 
 //Metod som skriver ut info om p-plats (t.ex. om det står 2 mc eller ett fordon på platsen)
 string PrintParkingSpaceInfo(int index)
