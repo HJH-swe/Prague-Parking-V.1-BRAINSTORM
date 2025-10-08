@@ -95,6 +95,7 @@ void MainMenu()
                 }
             case 5:
                 {
+                    // Claes - detta är en VG-funktion
                     Console.Clear();
                     Console.WriteLine("\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
                     VisualAllParkingSpaces(parkingSpaces);
