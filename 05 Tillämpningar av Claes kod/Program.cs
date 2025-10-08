@@ -448,15 +448,15 @@ void DisplayParking()
 
 void VisualAllParkingSpaces(string[] parkingSpaces)
 {
-    Console.Write("\nLediga p-platser är ");
+    Console.Write("\n\tLediga p-platser är ");
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine("gröna ");
     Console.ForegroundColor = ConsoleColor.Gray;
-    Console.Write("Halvfulla p-platser (med 1 MC) är ");
+    Console.Write("\tHalvfulla p-platser (med 1 MC) är ");
     Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("gula ");
     Console.ForegroundColor = ConsoleColor.Gray;
-    Console.Write("Fyllda p-platser (med 1 bil eller 2 MC) är ");
+    Console.Write("\tFyllda p-platser (med 1 bil eller 2 MC) är ");
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine("röda \n\n");
 
@@ -488,20 +488,20 @@ void VisualAllParkingSpaces(string[] parkingSpaces)
                 if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
+                    Console.Write("\t" + counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
                 }
                 // ANNARS OM det står en mc på platsen --> halvfylld
                 else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write(counter.ToString().PadLeft(4));
+                    Console.Write("\t" + counter.ToString().PadLeft(4));
                 }
             }
             // ANNARS: ingen bil eller mc på platsen --> tom
             else
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(counter.ToString().PadLeft(4));
+                Console.Write("\t" + counter.ToString().PadLeft(4));
             }
             counter++;
         }
