@@ -41,10 +41,9 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
-                    vehicleType = VehicleType();
+                    vehicleType = VehicleType(); //lägger till denna så att man kommer tillbaka till menyn för att registrera fordon, inte huvudmeny.
                     if (vehicleType == null)
                     {
-                        Thread.Sleep(500);
                         break;
                     }
                     RegisterParking(vehicleType);
@@ -53,20 +52,21 @@ void MainMenu()
                 }
             case 2:
                 {
+                    //kan vi ändra gränssnittet så att tidigare text rensas och man 
                     // HJH: Uppdaterade sökfunktionen, la till att man måste skriva in ett regnummer att söka på.
                     // Men koden är lite stökig. Är uppdateringen onödig? Ska vi ta bort?
                     bool validSearch = false;
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-
+                   
                     do
                     {
-
+                        Console.Clear(); Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
                         Console.Write("\n\tSkriv in fordonets registreringsnummer:");
+
                         string searchRegNumber = Console.ReadLine().ToUpper();
                         if (searchRegNumber.Length == 0 || searchRegNumber.Length > 10)
                         {
-                            Console.WriteLine("\n\n\tOgiltigt registreringsnummer. \n\tKontrollera registreringsnumret och sök igen.");
+                            Console.WriteLine("\n\tOgiltigt registreringsnummer. \n\tKontrollera registreringsnumret och sök igen.");
+                            Thread.Sleep(2000);
                         }
                         else
                         {
@@ -135,7 +135,13 @@ void RegisterParking(string? vehicleType)
         input = Console.ReadLine();
         if (string.IsNullOrEmpty(input) || input.Length > 10)
         {
-            Console.WriteLine("\tRegistreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
+            Console.WriteLine("\n\tRegistreringsnumret måste innehålla 1-10 tecken. Vänligen försök igen");
+            Thread.Sleep(2000);
+            vehicleType = VehicleType();
+            if (vehicleType == null)
+            {
+                return;
+            }
         }
     }
     while (string.IsNullOrEmpty(input) || input.Length > 10);
