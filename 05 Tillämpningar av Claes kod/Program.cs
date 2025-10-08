@@ -269,7 +269,7 @@ string PrintParkingSpaceInfo(int index)
         string[] splitMC = parkingSpaces[index].Split('|');
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
-        return String.Format($"\n\tPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}{temp1[1]}"); //la till mcDelimiter
+        return String.Format($"\n\tPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
                                                                                                               // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
