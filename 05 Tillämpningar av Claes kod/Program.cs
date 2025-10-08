@@ -197,6 +197,7 @@ void RegisterParking(string? vehicleType)
 //Metod för att menyval vid registrering av fordon
 static string? VehicleType()
 {
+    Console.Clear();
 
     Console.WriteLine("\n\t[1] Bil\n\t[2] MC \n\t[3] Återgå till huvudmenyn");
     Console.Write("\n\tVälj fordonstyp eller [3] för att återgå: ");
@@ -208,26 +209,22 @@ static string? VehicleType()
         {
             case 1:
                 return "CAR"; //bör vi ändra till BIL ?
-
             case 2:
                 return "MC";
-
             case 3: //går tillbaka till huvudmenyn
-
                 return null;
-
             default:
                 {
-                    Console.Clear();
-                    Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+                    Console.WriteLine("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+                    Thread.Sleep(1500);
                     return VehicleType();
                 }
         }
     }
     catch
     {
-        Console.Clear();
-        Console.Write("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+        Console.Write("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+        Thread.Sleep(1500);
         return VehicleType();
     }
 }
