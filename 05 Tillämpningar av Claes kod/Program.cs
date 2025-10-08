@@ -221,7 +221,7 @@ static string? VehicleType()
                 return null;
             default:
                 {
-                    Console.WriteLine("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+                    Console.Write("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn...\n");
                     Thread.Sleep(1500);
                     return VehicleType();
                 }
@@ -229,7 +229,7 @@ static string? VehicleType()
     }
     catch
     {
-        Console.Write("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+        Console.Write("\n\n\tOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn...\n");
         Thread.Sleep(1500);
         return VehicleType();
     }
@@ -433,7 +433,7 @@ void DisplayParking()
         }
         else
         {
-            Console.WriteLine($"Plats {i}: \t(ledig)");
+            Console.WriteLine($"\tPlats {i}: \t(ledig)");
         }
     }
     Console.ReadKey();
