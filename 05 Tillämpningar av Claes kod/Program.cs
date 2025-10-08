@@ -1,7 +1,7 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
 string? vehicleType;
 string regNumber;
-string delimiter = "#";       
+string delimiter = "#";
 string mcDelimiter = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
@@ -28,102 +28,98 @@ void MainMenu()
     Console.WriteLine("\t5) Översikt parkering");
     Console.WriteLine("\t6) Avsluta");
 
-    Console.Write("\n\tVälj ett alternativ (1-6): "); 
+    Console.Write("\n\tVälj ett alternativ (1-6): ");
 
     // Använder try-catch för att säkra upp koden
 
     try
     {
-        int menuInput = int.Parse(Console.ReadLine());
+    int menuInput = int.Parse(Console.ReadLine());
 
-        switch (menuInput)
-        {
-            case 1:
+    switch (menuInput)
+    {
+        case 1:
+            {
+                Console.Clear();
+                Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
+                vehicleType = VehicleType();
+                if (vehicleType == null)
                 {
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
-                    vehicleType = VehicleType();
-                    if (vehicleType == null)
+                    Thread.Sleep(500);
+                    break;
+                }
+                RegisterParking(vehicleType);
+                Console.ReadLine();
+                break;
+            }
+        case 2:
+            {
+                // HJH: Uppdaterade sökfunktionen, la till att man måste skriva in ett regnummer att söka på.
+                // Men koden är lite stökig. Är uppdateringen onödig? Ska vi ta bort?
+                bool validSearch = false;
+                Console.Clear();
+                Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
+                do
+                {
+                    Console.Write("\nSkriv in fordonets registreringsnummer:");
+                    string searchRegNumber = Console.ReadLine().ToUpper();
+                    if (searchRegNumber.Length == 0 || searchRegNumber.Length > 10)
                     {
-                        //Console.WriteLine("\tÅtergår till huvudmenyn...");  // HJH: Behöver vi skriva ut det här?
-                                                                            // Jag tycker nog det räcker att programmet går till huvudmenyn.
-                        //Console.ReadLine();
-                        //Thread.Sleep(1000);                               // Ett alternativ till console.readline
-                                                                            // -> går vidare automatiskt efter 1 sekund
-                        break;
+                        Console.WriteLine("\n\nOgiltigt registreringsnummer. \nKontrollera registreringsnumret och sök igen.");
                     }
-                    RegisterParking(vehicleType);
-                    Console.ReadLine();
-                    break;
-                }
-            case 2:
-                {
-                    // HJH: Uppdaterade sökfunktionen, la till att man måste skriva in ett regnummer att söka på.
-                    // Men koden är lite stökig. Är uppdateringen onödig? Ska vi ta bort?
-                    bool validSearch = false;
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-                    do 
+                    else
                     {
-                        Console.WriteLine("\nSkriv in fordonets registreringsnummer:");
-                        string searchRegNumber = Console.ReadLine().ToUpper();
-                        if (searchRegNumber.Length == 0 || searchRegNumber.Length > 10)
-                        {
-                            Console.WriteLine("\n\nOgiltigt registreringsnummer. \nKontrollera registreringsnumret och sök igen.");
-                        }
-                        else
-                        {
-                            validSearch = true;
-                            SearchVehicle(searchRegNumber);
-                        }
+                        validSearch = true;
+                        SearchVehicle(searchRegNumber);
                     }
-                    while(!validSearch);
-                    break;
                 }
-            case 3:
-                {
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
-                    // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
-                    MoveVehicle(1,2);
-                    break;
-                }
-            case 4:
-                {
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    CheckaOut("ABC123", parkingSpaces);
-                    //CheckoutVehicle();
-                    break;
-                }
-            case 5:
-                {
-                    Console.Clear();
-                    Console.WriteLine("\t~~ ÖVERSIKT PARKERING ~~");
-                    DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
-                    break;
-                }
-            case 6:
-                {
-                    Console.WriteLine("\nProgrammet avslutas...\n\n");
-                    Thread.Sleep(1000); // HJH: La in en liten paus innan programmet stängs
-                    displayMenu = false;
-                    break;
-                }
-            default:
-                {
-                    Console.Clear();
-                    Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-6");
-                    Console.ReadKey();
-                    break;
-                }
-        }
+                while (!validSearch);
+                break;
+            }
+        case 3:
+            {
+                Console.Clear();
+                Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
+                // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
+                MoveVehicle(1, 2);
+                break;
+            }
+        case 4:
+            {
+                Console.Clear();
+                Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
+                CheckaOut("ABC123", parkingSpaces);
+                //CheckoutVehicle();
+                break;
+            }
+        case 5:
+            {
+                Console.Clear();
+                Console.WriteLine("\t~~ ÖVERSIKT PARKERING ~~");
+                DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
+                break;
+            }
+        case 6:
+            {
+                Console.WriteLine("\nProgrammet avslutas...\n\n");
+                Thread.Sleep(1000); // HJH: La in en liten paus innan programmet stängs
+                displayMenu = false;
+                break;
+            }
+        default:
+            {
+                Console.Clear();
+                Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-6");
+                Console.ReadKey();
+                break;
+            }
     }
+}
     catch
     {
-        Console.WriteLine("Ogiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
-        Console.ReadLine(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
-    }
+    Console.WriteLine("Ogiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
+    Console.ReadLine(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
+}
 
 }
 
@@ -134,11 +130,11 @@ void RegisterParking(string? vehicleType)
     string? input;
     do
     {
-        Console.Write("\nAnge registreringsnummer: ");
+        Console.Write("\n\tAnge registreringsnummer: ");
         input = Console.ReadLine();
         if (string.IsNullOrEmpty(input) || input.Length > 10)
         {
-            Console.WriteLine("Registreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
+            Console.WriteLine("\tRegistreringsnumret måste vara 1-10 tecken. Vänligen försök igen");
         }
     }
     while (string.IsNullOrEmpty(input) || input.Length > 10);
@@ -200,8 +196,9 @@ void RegisterParking(string? vehicleType)
 //Metod för att menyval vid registrering av fordon
 static string? VehicleType()
 {
+
     Console.WriteLine("\n\t[1] Bil\n\t[2] MC \n\t[3] Återgå till huvudmenyn");
-    Console.Write("\n\tVälj fordonstyp: ");
+    Console.Write("\n\tVälj fordonstyp eller [3] för att återgå: ");
 
     try
     {
@@ -209,15 +206,15 @@ static string? VehicleType()
         switch (menuSelect)
         {
             case 1:
-                return "CAR";
+                return "CAR"; //bör vi ändra till BIL ?
 
             case 2:
                 return "MC";
 
-            case 3: //la till detta för att kunna gå tillbaka till huvudmenyn
+            case 3: //går tillbaka till huvudmenyn
 
                 return null;
-                
+
             default:
                 {
                     Console.Clear();
@@ -229,7 +226,7 @@ static string? VehicleType()
     catch
     {
         Console.Clear();
-        Console.WriteLine("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
+        Console.Write("\n\nOgiltigt val. Tryck [1] för bil, [2] för MC eller [3] för huvudmenyn.\n");
         return VehicleType();
     }
 }
@@ -243,7 +240,7 @@ void SearchVehicle(string searchNumber)
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         // Om värdet inte är null eller "" står det ett fordon på p-platsen (och parkeringen är inte tom)
-        if (parkingSpaces[i] != null && parkingSpaces[i] != "")     
+        if (parkingSpaces[i] != null && parkingSpaces[i] != "")
         {
             emptyParking = false;
             if (parkingSpaces[i].Contains(searchNumber))
@@ -282,11 +279,11 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
         if (parkingSpaces[i].Contains(regNumber))
         {
             // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
-                // Kod som bara tar bort rätt fordon
-                // Splitta strängen och ta bort rätt del
+            // Kod som bara tar bort rätt fordon
+            // Splitta strängen och ta bort rätt del
 
             // ANNARS (då står det bara ett fordon på platsen)
-                // kod som nollställer platsen
+            // kod som nollställer platsen
             parkingSpaces[i] = null; // tar bort bilen
             return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
@@ -303,96 +300,98 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
 /// </summary>
 /*static*/
 void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan man använda samma variabler som finns i hela programmet,
-                                                          // t. ex. parkingSpaces[]
+                                           // t. ex. parkingSpaces[]
+{
+    // HJH: Behöver nog inte göra - 1.
+    // Vår vektor går från 0-100, men vi använder inte plats 0 (i loopar osv). Så alla index borde representera rätt p-plats
+
+    if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
     {
-        // HJH: Behöver nog inte göra - 1.
-        // Vår vektor går från 0-100, men vi använder inte plats 0 (i loopar osv). Så alla index borde representera rätt p-plats
+        Console.WriteLine(" Ogiltigt platsnummer!");
+        return;
+    }
 
-        if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
+    if (string.IsNullOrEmpty(parkingSpaces[fromSpot])) // HJH: Bytte namn från parkingGarage[] till parkingSpaces[] (även nedanför)
+    {
+        Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
+        return;
+    }
+
+    string vehicleToMove = parkingSpaces[fromSpot];
+    string[] vehiclesAtFrom = vehicleToMove.Split('|');
+
+    if (vehiclesAtFrom.Length > 1)
+    {
+        Console.WriteLine($" Plats {fromSpot} innehåller flera fordon. Specificera vilket du vill flytta.");
+        return;
+    }
+
+    if (string.IsNullOrEmpty(parkingSpaces[toSpot]))
+    {
+        // Målruta tom → flytta direkt
+        parkingSpaces[toSpot] = vehicleToMove;
+        parkingSpaces[fromSpot] = null;
+        Console.WriteLine($" Fordon flyttades från plats {fromSpot} till {toSpot}."); // HJH: Måste l   ägga in kod (console.readline eller console.readkey)
+                                                                                      // för att hinna läsa såna här meddelanden
+    }
+    else
+    {
+        string[] vehiclesAtTo = parkingSpaces[toSpot].Split('|');
+
+        // Fall: Bil finns på målrutan → inte tillåtet
+        if (parkingSpaces[toSpot].Contains("CAR"))
         {
-            Console.WriteLine(" Ogiltigt platsnummer!");
+            Console.WriteLine($" Kan inte flytta till plats {toSpot}, bil upptar platsen.");
             return;
         }
 
-        if (string.IsNullOrEmpty(parkingSpaces[fromSpot])) // HJH: Bytte namn från parkingGarage[] till parkingSpaces[] (även nedanför)
+        // Fall: MC finns på målrutan → kolla om det redan är två MC
+        if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
         {
-            Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
-            return;
-        }
-
-        string vehicleToMove = parkingSpaces[fromSpot];
-        string[] vehiclesAtFrom = vehicleToMove.Split('|');
-
-        if (vehiclesAtFrom.Length > 1)
-        {
-            Console.WriteLine($" Plats {fromSpot} innehåller flera fordon. Specificera vilket du vill flytta.");
-            return;
-        }
-
-        if (string.IsNullOrEmpty(parkingSpaces[toSpot]))
-        {
-            // Målruta tom → flytta direkt
-            parkingSpaces[toSpot] = vehicleToMove;
+            // Flytta MC och kombinera
+            parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
             parkingSpaces[fromSpot] = null;
-            Console.WriteLine($" Fordon flyttades från plats {fromSpot} till {toSpot}."); // HJH: Måste l   ägga in kod (console.readline eller console.readkey)
-                                                                                          // för att hinna läsa såna här meddelanden
+            Console.WriteLine($" MC flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
+
         }
         else
         {
-            string[] vehiclesAtTo = parkingSpaces[toSpot].Split('|');
+            Console.WriteLine($" Plats {toSpot} är redan full.");
 
-            // Fall: Bil finns på målrutan → inte tillåtet
-            if (parkingSpaces[toSpot].Contains("CAR"))
-            {
-                Console.WriteLine($" Kan inte flytta till plats {toSpot}, bil upptar platsen.");
-                return;
-            }
-
-            // Fall: MC finns på målrutan → kolla om det redan är två MC
-            if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
-            {
-                // Flytta MC och kombinera
-                parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
-                parkingSpaces[fromSpot] = null;
-                Console.WriteLine($" MC flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
-
-            }
-            else
-            {
-                Console.WriteLine($" Plats {toSpot} är redan full.");
-            
-            }
         }
+    }
     Console.ReadLine();
-    }
+}
 
-   /* static*/ bool IsValidIndex(int index)
-    {
-        return index >= 0 && index < parkingSpaces.Length;
-    }
+/* static*/
+bool IsValidIndex(int index)
+{
+    return index >= 0 && index < parkingSpaces.Length;
+}
 
-    /*static*/ void PrintGarage()
+/*static*/
+void PrintGarage()
+{
+    Console.WriteLine("\n--- Parkeringsstatus ---");
+    for (int i = 0; i < parkingSpaces.Length; i++)
     {
-        Console.WriteLine("\n--- Parkeringsstatus ---");
-        for (int i = 0; i < parkingSpaces.Length; i++)
-        {
-            if (!string.IsNullOrEmpty(parkingSpaces[i]))
-                Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
-        }
-        Console.WriteLine("------------------------\n");
+        if (!string.IsNullOrEmpty(parkingSpaces[i]))
+            Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
     }
+    Console.WriteLine("------------------------\n");
+}
 
 //Metod som skriver ut info om p-plats (t.ex. om det står 2 mc eller ett fordon på platsen)
 string PrintParkingSpaceInfo(int index)
 {
     //Om det står 2 MC på platsen kommer det finnas | i strängen
     if (parkingSpaces[index].Contains('|'))
-    {                                                       
-        string[] splitMC = parkingSpaces[index].Split('|'); 
+    {
+        string[] splitMC = parkingSpaces[index].Split('|');
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
         return String.Format($"Plats {index}: {temp0[0]}{temp0[1]} {mcDelimiter} {temp1[0]}{temp1[1]}"); //la till mcDelimiter
-                                                                                                           // HJH: ändrade till temp1[] för att skriva ut andra mc:n
+                                                                                                         // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
     else
