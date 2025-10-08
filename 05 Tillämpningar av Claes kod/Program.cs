@@ -56,7 +56,7 @@ void MainMenu()
                     // HJH: Uppdaterade sökfunktionen, la till att man måste skriva in ett regnummer att söka på.
                     // Men koden är lite stökig. Är uppdateringen onödig? Ska vi ta bort?
                     bool validSearch = false;
-                   
+
                     do
                     {
                         Console.Clear(); Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
@@ -270,7 +270,7 @@ string PrintParkingSpaceInfo(int index)
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
         return String.Format($"\nPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
-                                                                                                              // HJH: ändrade till temp1[] för att skriva ut andra mc:n
+                                                                                                             // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
     else
@@ -427,17 +427,22 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
 
 void DisplayParking()
 {
+    bool isParked = false;
 
+    Console.WriteLine("\n\n\t~ Incheckade bilar ~");
     for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
     {
         if (!string.IsNullOrEmpty(parkingSpaces[i]))
         {
             Console.WriteLine(PrintParkingSpaceInfo(i));
+            isParked = true;
         }
-        else
-        {
-            Console.WriteLine($"\tPlats {i}: \t(ledig)");
-        }
+
+    }
+    if (!isParked)
+    {
+        Console.WriteLine("\nDet finns inga parkerade fordon");
+        Console.Write("Tryck på en tangent för att återgå till huvudmenyn...");
     }
     Console.ReadKey();
 }
