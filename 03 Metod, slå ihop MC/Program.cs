@@ -54,6 +54,20 @@ void MergeMC()
 
 void VisualAllParkingSpaces()
 {
+    Console.WriteLine("\t\t~~ ÖVERSIKT ÖVER HELA PARKERINGEN ~~");
+    Console.Write("\nLediga p-platser är ");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("gröna ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Halvfulla p-platser (med 1 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("gula ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Fyllda p-platser (med 1 bil eller 2 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("röda \n\n");
+
+
     string[,] parkingMatrix = new string[10, 10];
     // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
     int counter = 1; 

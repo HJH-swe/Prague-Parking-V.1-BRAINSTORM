@@ -96,7 +96,8 @@ void MainMenu()
             case 5:
                 {
                     Console.Clear();
-                    Console.WriteLine("\t~~ ÖVERSIKT PARKERING ~~");
+                    Console.WriteLine("\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
+                    VisualAllParkingSpaces(parkingSpaces);
                     DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
                     break;
                 }
@@ -437,6 +438,70 @@ void DisplayParking()
         }
     }
     Console.ReadKey();
+}
+
+void VisualAllParkingSpaces(string[] parkingSpaces)
+{
+    Console.Write("\nLediga p-platser är ");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("gröna ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Halvfulla p-platser (med 1 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("gula ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Fyllda p-platser (med 1 bil eller 2 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("röda \n\n");
+
+
+    string[,] parkingMatrix = new string[10, 10];
+    // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+    int counter = 1;
+
+    // Lägger in strängarna från vektorn parkingSpaces i matrisen
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            // Räknaren används som index på parkingSpaces - för att få strängarna på rätt plats [i, j]
+            parkingMatrix[i, j] = parkingSpaces[counter];
+            counter++;
+        }
+    }
+
+    // Räknaren börjar på 1 (för att p-platserna börjar på 1)
+    counter = 1;
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            if (parkingMatrix[i, j] != null)
+            {
+                // OM det står en bil eller två mc på platsen --> upptagen
+                if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(counter.ToString().PadLeft(4));         // Co-pilot föreslog .PadLeft för snygg formatering
+                }
+                // ANNARS OM det står en mc på platsen --> halvt upptagen
+                else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(counter.ToString().PadLeft(4));
+                }
+            }
+            // ANNARS: ingen bil eller mc på platsen --> tom
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(counter.ToString().PadLeft(4));
+            }
+            counter++;
+        }
+        Console.WriteLine();
+    }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }
 
 //Flyttar ner denna då den inte används för tillfället /SR
