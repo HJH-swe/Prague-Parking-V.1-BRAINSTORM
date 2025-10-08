@@ -103,7 +103,7 @@ void MainMenu()
                 {
                     // Claes - detta är en VG-funktion
                     Console.Clear();
-                    Console.WriteLine("\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
+                    Console.WriteLine("\t\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
                     VisualAllParkingSpaces(parkingSpaces);
                     DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
                     break;
