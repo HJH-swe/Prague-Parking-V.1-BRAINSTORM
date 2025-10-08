@@ -95,8 +95,10 @@ void MainMenu()
                 }
             case 5:
                 {
+                    // Claes - detta är en VG-funktion
                     Console.Clear();
-                    Console.WriteLine("\t~~ ÖVERSIKT PARKERING ~~");
+                    Console.WriteLine("\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
+                    VisualAllParkingSpaces(parkingSpaces);
                     DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
                     break;
                 }
@@ -267,14 +269,14 @@ string PrintParkingSpaceInfo(int index)
         string[] splitMC = parkingSpaces[index].Split('|');
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
-        return String.Format($"\n\tPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}{temp1[1]}"); //la till mcDelimiter
+        return String.Format($"\nPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
                                                                                                               // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
     else
     {
         string[] temp = parkingSpaces[index].Split('#');
-        return String.Format("\n\tPlats {2}: {0}#{1}", temp[0], temp[1], index);
+        return String.Format("\nPlats {2}: {0}#{1}", temp[0], temp[1], index);
     }
 }
 
@@ -387,6 +389,18 @@ bool IsValidIndex(int index)
     return index >= 0 && index < parkingSpaces.Length;
 }
 
+/*static*/
+void PrintGarage()
+{
+    Console.WriteLine("\n--- Parkeringsstatus ---");
+    for (int i = 0; i < parkingSpaces.Length; i++)
+    {
+        if (!string.IsNullOrEmpty(parkingSpaces[i]))
+            Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
+    }
+    Console.WriteLine("------------------------\n");
+}
+
 
 /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
 // String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
@@ -411,17 +425,6 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
     return $"Inget fordon med regnr {regNumber} hittades.";
 }
 
-/*static*/
-void PrintGarage()
-{
-    Console.WriteLine("\n--- Parkeringsstatus ---");
-    for (int i = 0; i < parkingSpaces.Length; i++)
-    {
-        if (!string.IsNullOrEmpty(parkingSpaces[i]))
-            Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
-    }
-    Console.WriteLine("------------------------\n");
-}
 void DisplayParking()
 {
 
@@ -437,6 +440,70 @@ void DisplayParking()
         }
     }
     Console.ReadKey();
+}
+
+void VisualAllParkingSpaces(string[] parkingSpaces)
+{
+    Console.Write("\nLediga p-platser är ");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("gröna ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Halvfulla p-platser (med 1 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("gula ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("Fyllda p-platser (med 1 bil eller 2 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("röda \n\n");
+
+
+    string[,] parkingMatrix = new string[10, 10];
+    // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+    int counter = 1;
+
+    // Lägger in strängarna från vektorn parkingSpaces i matrisen
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            // Räknaren används som index på parkingSpaces[] - för att få strängarna på rätt plats [i, j]
+            parkingMatrix[i, j] = parkingSpaces[counter];
+            counter++;
+        }
+    }
+
+    // Räknaren börjar om på 1 (för att p-platserna börjar på 1)
+    counter = 1;
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            if (parkingMatrix[i, j] != null)
+            {
+                // OM det står en bil eller två mc på platsen --> upptagen
+                if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
+                }
+                // ANNARS OM det står en mc på platsen --> halvfylld
+                else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write(counter.ToString().PadLeft(4));
+                }
+            }
+            // ANNARS: ingen bil eller mc på platsen --> tom
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(counter.ToString().PadLeft(4));
+            }
+            counter++;
+        }
+        Console.WriteLine();
+    }
+    Console.ForegroundColor = ConsoleColor.Gray;
 }
 
 //Flyttar ner denna då den inte används för tillfället /SR
