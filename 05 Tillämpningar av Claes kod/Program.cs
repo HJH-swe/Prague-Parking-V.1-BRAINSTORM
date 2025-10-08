@@ -329,12 +329,9 @@ void SearchVehicle(string searchNumber)
 //Metod för att flytta fordon
 /// Flyttar ett fordon från en plats till en annan.
 /// Hanterar regler för bil/MC/2 MC.
-/*static*/
-void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan man använda samma variabler som finns i hela programmet,
-                                           // t. ex. parkingSpaces[]
+void MoveVehicle(int fromSpot, int toSpot) 
 {
-    // HJH: Behöver nog inte göra - 1.
-    // Vår vektor går från 0-100, men vi använder inte plats 0 (i loopar osv). Så alla index borde representera rätt p-plats
+  
 
     if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
     {
@@ -342,7 +339,7 @@ void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan ma
         return;
     }
 
-    if (string.IsNullOrEmpty(parkingSpaces[fromSpot])) // HJH: Bytte namn från parkingGarage[] till parkingSpaces[] (även nedanför)
+    if (string.IsNullOrEmpty(parkingSpaces[fromSpot]))
     {
         Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
         return;
@@ -394,13 +391,11 @@ void MoveVehicle(int fromSpot, int toSpot) // HJH: Om man tar bort static kan ma
     Console.ReadLine();
 }
 
-/* static*/
 bool IsValidIndex(int index)
 {
-    return index >= 0 && index < parkingSpaces.Length;
+    return index > 0 && index <= 100;
 }
 
-/*static*/
 void PrintGarage()
 {
     Console.WriteLine("\n--- Parkeringsstatus ---");
