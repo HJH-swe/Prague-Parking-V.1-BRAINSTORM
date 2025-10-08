@@ -471,7 +471,7 @@ void DisplayParking()
 {
     bool isParked = false;
 
-    Console.WriteLine("\n\n\t~ Incheckade bilar ~");
+    Console.WriteLine("\n\n\t~ Incheckade fordon ~");
     for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
     {
         if (!string.IsNullOrEmpty(parkingSpaces[i]))
