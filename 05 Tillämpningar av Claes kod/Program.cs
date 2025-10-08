@@ -39,7 +39,6 @@ void MainMenu()
         {
             case 1:
                 {
-                    
                     //Console.WriteLine("\t ~~ REGISTRERA FORDON ~~"); //flyttade in denna rad i VehicleType(); då konsolen tidigare rensades och tog bort denna rad
                     vehicleType = VehicleType(); //lägger till denna så att man kommer tillbaka till menyn för att registrera fordon, inte huvudmeny.
                     if (vehicleType == null)
@@ -61,7 +60,7 @@ void MainMenu()
                     {
                         Console.Clear();
                         Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-                        Console.Write("\n\tSkriv in fordonets registreringsnummer (eller tryck [Enter] för att återgå till huvudmenyn): ");
+                        Console.Write("\n\tAnge registreringsnummer (eller tryck [Enter] för att återgå till huvudmenyn): ");
 
                         string searchRegNumber = Console.ReadLine().ToUpper();
                         if (string.IsNullOrEmpty(searchRegNumber))
@@ -218,7 +217,7 @@ static string? VehicleType()
 
     //denna kod kommer att låta användaren återgå till huvudmenyn om inmatningen är tom
     string input = Console.ReadLine();
-    if (string.IsNullOrEmpty(input))
+    if (string.IsNullOrEmpty(input)) 
     { 
         return null; 
     }
