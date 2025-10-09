@@ -464,7 +464,10 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i].Contains(regNumber))
-        {
+
+            if (parkingSpaces[i].StartsWith("MC#") && !parkingSpaces[i].Contains('|'))
+
+            {
             // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
             // Kod som bara tar bort rätt fordon
             // Splitta strängen och ta bort rätt del
