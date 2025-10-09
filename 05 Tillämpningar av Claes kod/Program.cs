@@ -1,5 +1,6 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
 using System;
+using System.ComponentModel.Design;
 using System.Reflection.Metadata.Ecma335;
 
 string? vehicleType;
@@ -458,28 +459,50 @@ bool IsValidIndex(int index)
 /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
 // String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 // --> string1 = MC#ABC123  string2 = MC#CDE456
+// OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
+// Kod som bara tar bort rätt fordon
+// Splitta strängen och ta bort rätt del
+
+// ANNARS (då står det bara ett fordon på platsen)
+// kod som nollställer platsen
 
 string CheckaOut(string regNumber, string[] parkingSpaces)
 {
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i].Contains(regNumber))
-
-            if (parkingSpaces[i].StartsWith("MC#") && !parkingSpaces[i].Contains('|'))
+        { 
+            if (parkingSpaces[i].Contains('|'))
 
             {
-            // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
-            // Kod som bara tar bort rätt fordon
-            // Splitta strängen och ta bort rätt del
+                string[] splitMC = parkingSpaces[i].Split('|');
 
-            // ANNARS (då står det bara ett fordon på platsen)
-            // kod som nollställer platsen
-            parkingSpaces[i] = null; // tar bort bilen
-            return $"Fordon {regNumber} har checkats ut från plats {i}.";
+                if (splitMC[0].Contains(regNumber))
+                
+                    parkingSpaces[i] = splitMC[1];
+                
+                else if (splitMC[1].Contains(regNumber))
+                
+                    parkingSpaces[i] = splitMC[0];
+                
+
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
-    }
-    return $"Inget fordon med regnr {regNumber} hittades.";
+    
+            if (parkingSpaces[i].StartsWith("MC#"))
+        {
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
+            
+            }
+               
+              else
+        {
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
 }
+    }
+
 
 void DisplayParking()
 {
