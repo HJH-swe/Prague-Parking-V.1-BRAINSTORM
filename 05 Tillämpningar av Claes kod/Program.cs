@@ -92,7 +92,6 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    CheckaOut("ABC123", parkingSpaces);
                     //CheckoutVehicle();
                     break;
                 }
@@ -276,9 +275,11 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i].Contains(regNumber))
-        {
-            parkingSpaces[i] = null; // tar bort bilen
-            return $"Fordon {regNumber} har checkats ut från plats {i}.";
+
+            if (parkingSpaces[i].StartsWith("MC#") && !parkingSpaces[i].Contains('|'))
+            {
+            parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
     }
     return $"Inget fordon med regnr {regNumber} hittades.";
