@@ -470,27 +470,28 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
 {
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
-        if (parkingSpaces[i].Contains(regNumber))
+        if (parkingSpaces[i].Contains(regNumber))       //Hittar vi fordonet med regNumber så går vi vidare
         { 
-            if (parkingSpaces[i].Contains('|'))
+            if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
 
             {
-                string[] splitMC = parkingSpaces[i].Split('|');
+                string[] splitMC = parkingSpaces[i].Split('|');     // Delar upp strängen i två delar för att checka korrekt MC
+                                                                    // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
                 if (splitMC[0].Contains(regNumber))
                 
-                    parkingSpaces[i] = splitMC[1];
-                
+                    parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+
                 else if (splitMC[1].Contains(regNumber))
                 
-                    parkingSpaces[i] = splitMC[0];
-                
+                    parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
+
 
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
     
-            if (parkingSpaces[i].StartsWith("MC#"))
-        {
+            if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
+            {
                 parkingSpaces[i] = null; // tar bort fordonet från platsen
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             
