@@ -1,4 +1,5 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
+using System;
 using System.Reflection.Metadata.Ecma335;
 
 string? vehicleType;
@@ -7,6 +8,7 @@ string delimiter = "#";
 string mcDelimiter = "|";
 string[] parkingSpaces = new string[101];       // Skapar 101 element (0-100). P-plats 0 ska aldrig användas --> 100 p-platser
 bool displayMenu = true;
+int menuInput;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
@@ -35,7 +37,7 @@ void MainMenu()
 
     try
     {
-        int menuInput = int.Parse(Console.ReadLine());
+        menuInput = int.Parse(Console.ReadLine());
 
         switch (menuInput)
         {
@@ -62,7 +64,7 @@ void MainMenu()
                     {
                         Console.Clear();
                         Console.WriteLine("\t ~~ SÖK EFTER FORDON ~~");
-                        Console.Write("\n\tAnge registreringsnummer (eller tryck [Enter] för att återgå till huvudmenyn): ");
+                        Console.Write("\n\tAnge registreringsnummer (eller tryck [Enter] för huvudmenyn): ");
 
                         string searchRegNumber = Console.ReadLine().ToUpper();
                         if (string.IsNullOrEmpty(searchRegNumber))
@@ -88,11 +90,13 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
+                    // La in "bilden" över hela parkeringen -> lättare för användaren att välja p-platser att flytta från och till
+                    VisualAllParkingSpaces(parkingSpaces);
 
-                    Console.Write("\nAnge p-plats att flytta fordonet från: "); //HJH Om man inte skriver en int här skickas man ner till catch "ogiltigt menyval"
-                    int fromSpot = int.Parse(Console.ReadLine());
+                    Console.Write("\nAnge p-plats att flytta fordonet från: ");
+                    int.TryParse(Console.ReadLine(), out int fromSpot);
                     Console.Write("\nAnge p-plats att flytta fordonet till: ");
-                    int toSpot = int.Parse(Console.ReadLine());
+                    int.TryParse(Console.ReadLine(), out int toSpot);
                     MoveVehicle(fromSpot, toSpot);
                     break;
                 }
@@ -163,6 +167,9 @@ void RegisterParking(string? vehicleType)
     int parkingIndex = -1; // initierar en ny int variabel med värdet -1 för att hålla reda på vilken p-plats fordonet tilldelas. -1 betyder att ingen plats har hittats än
                            //om det inte finns en ledig plats förblir värdet -1 och ett felmeddelande visas, används även för att visa info om var fordonet parkerats
 
+    // Claes - det här är en VG-uppgift:
+    // En inbyggd optimeringsrutin som ser till att 2 MC alltid parkeras ihop
+    // Personalen behöver inte gå och flytta MC senare
     if (vehicleType == "MC") //Om en MC registreras
     {
         for (int i = 1; i < parkingSpaces.Length; i++) //börjar söka på plats 1 i arrayen
@@ -213,7 +220,7 @@ void RegisterParking(string? vehicleType)
     //Console.ReadLine();
 }
 
-//Metod för att menyval vid registrering av fordon
+//Metod med menyval vid registrering av fordon
 static string? VehicleType()
 {
     Console.Clear();
@@ -332,25 +339,26 @@ void SearchVehicle(string searchNumber)
     Console.ReadLine();
 }
 
-//Metod för att flytta fordon
-/// Flyttar ett fordon från en plats till en annan.
-/// Hanterar regler för bil/MC/2 MC.
+
+//Metod för att flytta fordon från en plats till en annan.
 void MoveVehicle(int fromSpot, int toSpot)
 {
 
-
     if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
     {
-        Console.WriteLine(" Ogiltigt platsnummer!");
+        Console.WriteLine("\nOgiltigt platsnummer!");
+        Thread.Sleep(1500);
         return;
     }
 
     if (string.IsNullOrEmpty(parkingSpaces[fromSpot]))
     {
-        Console.WriteLine($" Ingen bil eller MC finns på plats {fromSpot}.");
+        Console.WriteLine($"\nIngen bil eller MC finns på plats {fromSpot}.");
+        Thread.Sleep(2000);
         return;
     }
 
+    Console.Clear();
     bool splitRequired = false;
     string vehicleToMove = parkingSpaces[fromSpot];
     string[] vehiclesAtFrom = vehicleToMove.Split('|');
@@ -358,45 +366,46 @@ void MoveVehicle(int fromSpot, int toSpot)
     if (vehiclesAtFrom.Length > 1)
     {
         splitRequired = true;
-        Console.WriteLine($"\nPlats {fromSpot} innehåller flera fordon.");
+        Console.WriteLine($"\n\nPlats {fromSpot} innehåller flera fordon.");
         Console.WriteLine(PrintParkingSpaceInfo(fromSpot));
 
-
-        Console.Write("\nAnge registreringsnumret på fordonet du vill flytta: ");
-        string regNumber = Console.ReadLine().ToUpper();
-        bool validRegNumber = true;     //TODO: Kolla om det finns en smidigare lösning utan bool. /HJH
+        bool validRegNumber = false;   
         do
         {
+            Console.Write("\nAnge registreringsnumret på fordonet du vill flytta: ");
+            string regNumber = Console.ReadLine().ToUpper();
             if (vehiclesAtFrom[0].Contains(regNumber))
             {
                 vehicleToMove = vehiclesAtFrom[0];
                 parkingSpaces[fromSpot] = vehiclesAtFrom[1];
+                validRegNumber = true;
 
             }
             else if (vehiclesAtFrom[1].Contains(regNumber))
             {
                 vehicleToMove = vehiclesAtFrom[1];
                 parkingSpaces[fromSpot] = vehiclesAtFrom[0];
+                validRegNumber = true;
             }
             else
             {
                 Console.WriteLine("\n\tOgiltigt registreringsnummer. \n\tVänligen skriv in det igen.");
-                Thread.Sleep(1500);
                 validRegNumber = false;
             }
         } while (!validRegNumber);
+    }
+    // Bara ett fordon på platsen fromSpot -> tar bort från fromSpot
+    else
+    {
+        vehicleToMove = vehiclesAtFrom[0];
+        parkingSpaces[fromSpot] = null;
     }
 
     if (string.IsNullOrEmpty(parkingSpaces[toSpot]))
     {
         // Målruta tom → flytta direkt
         parkingSpaces[toSpot] = vehicleToMove;
-        if (splitRequired == false)
-        {
-            parkingSpaces[fromSpot] = null;
-        }
-            Console.WriteLine($"\n\nFordon {vehicleToMove} flyttades från plats {fromSpot} till {toSpot}.");
-
+        Console.WriteLine($"\n\nFordon {vehicleToMove} flyttades från plats {fromSpot} till {toSpot}.");
     }
     else
     {
@@ -405,23 +414,25 @@ void MoveVehicle(int fromSpot, int toSpot)
         // Fall: Bil finns på målrutan → inte tillåtet
         if (parkingSpaces[toSpot].Contains("CAR"))
         {
-            Console.WriteLine($" Kan inte flytta till plats {toSpot}, bil upptar platsen.");
+            Console.WriteLine($"\n\nKan inte flytta till plats {toSpot}, bil upptar platsen.");
+            parkingSpaces[fromSpot] = vehicleToMove;
+            Console.ReadKey();
             return;
         }
 
-        // Fall: MC finns på målrutan → kolla om det redan är två MC
+        // Fall: MC finns på målrutan: Om bara en MC → flytta dit MC.
         if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
         {
             // Flytta MC och kombinera
             parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
-            parkingSpaces[fromSpot] = null;
-            Console.WriteLine($" MC flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
-
+            
+            Console.WriteLine($"\n\nMC {vehicleToMove} flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
         }
+        // Annars är platsen upptagen → flytten misslyckas
         else
         {
-            Console.WriteLine($" Plats {toSpot} är redan full.");
-
+            Console.WriteLine($"\n\nPlats {toSpot} är redan full. Kunde inte flytta fordon.");
+            parkingSpaces[fromSpot] = vehicleToMove;
         }
     }
     Console.ReadLine();
@@ -432,16 +443,7 @@ bool IsValidIndex(int index)
     return index > 0 && index <= 100;
 }
 
-void PrintGarage()
-{
-    Console.WriteLine("\n--- Parkeringsstatus ---");
-    for (int i = 0; i < parkingSpaces.Length; i++)
-    {
-        if (!string.IsNullOrEmpty(parkingSpaces[i]))
-            Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
-    }
-    Console.WriteLine("------------------------\n");
-}
+
 
 
 /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
@@ -485,7 +487,7 @@ void DisplayParking()
         Console.WriteLine("\n\tDet finns inga parkerade fordon");
 
     }
-    Console.Write("\tTryck på en tangent för att återgå till huvudmenyn...");
+    Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
     Console.ReadKey();
 }
 
@@ -614,3 +616,44 @@ void VisualAllParkingSpaces(string[] parkingSpaces)
 //}
 
 // la in denna för att kunna testa programmet och se om fordonen registreras korrekt
+
+
+// HJH: Jag klipper ut och sparar delar metoden MoveVehicle här .
+// Har krånglat till metoden hemskt mycket, och ska försöka reda ut det.
+// Men sparar kod vi redan hade i fall man måste stoppa in det igen.
+
+/* Från rad 430 - precis efter //Flytta MC och kombinera - parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
+ 
+            // Borttagning av MC från fromSpot
+            string[] fromVehicles = parkingSpaces[fromSpot].Split('|');
+
+            // Om det stod 2 MC på fromSpot
+            if (fromVehicles.Length == 2)
+            {
+                // Ta bort en MC, lämna kvar den andra
+                if (fromVehicles[0] == vehicleToMove)
+                {
+                    parkingSpaces[fromSpot] = fromVehicles[1];
+                }
+                else if (fromVehicles[1] == vehicleToMove)
+                {
+                    parkingSpaces[fromSpot] = fromVehicles[0];
+                }
+            }
+            else
+            {
+                // Endast en MC på platsen, ta bort den
+                parkingSpaces[fromSpot] = null;
+            }*/
+
+/* HJH: Den här metoden används inte - lägger den här 
+void PrintGarage()
+{
+    Console.WriteLine("\n--- Parkeringsstatus ---");
+    for (int i = 0; i < parkingSpaces.Length; i++)
+    {
+        if (!string.IsNullOrEmpty(parkingSpaces[i]))
+            Console.WriteLine($"Plats {i + 1}: {parkingSpaces[i]}");
+    }
+    Console.WriteLine("------------------------\n");
+}*/
