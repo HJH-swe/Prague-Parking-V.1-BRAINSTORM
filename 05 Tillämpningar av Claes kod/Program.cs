@@ -8,7 +8,10 @@ bool displayMenu = true;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
-
+parkingSpaces[1] = "CAR#DEF456";
+parkingSpaces[2] = "CAR#GHI789";
+parkingSpaces[3] = "MC#ABC456";
+parkingSpaces[4] = "MC#DEF789";
 do
 {
     MainMenu();
@@ -84,43 +87,64 @@ void MainMenu()
                 }
             case 3:
                 {
+                    bool isValid = false;
+                    do {    
                     Console.Clear();
                     Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
                     // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
-                    MoveVehicle(1, 2);
-                    break;
+                    Console.Write("\n\tAnge registreringsnummer (eller tryck [Enter] för att återgå till huvudmenyn): ");
+
+                    string searchRegNumber = Console.ReadLine().ToUpper();
+                    if (string.IsNullOrEmpty(searchRegNumber))
+                    {
+                        // Användaren trycker Enter för att gå tillbaka till huvudmenyn
+                        break;
+                    }
+                    else if (searchRegNumber.Length > 10)
+                    {
+                        Console.WriteLine("\n\tOgiltigt registreringsnummer. \n\tKontrollera registreringsnumret och sök igen.");
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        isValid = true;
+                        MoveVehicle(1, 2);
+                    }
                 }
-            case 4:
-                {
-                    Console.Clear();
-                    Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    CheckaOut("ABC123", parkingSpaces);
-                    //CheckoutVehicle();
-                    break;
-                }
-            case 5:
-                {
-                    // Claes - detta är en VG-funktion
-                    Console.Clear();
-                    Console.WriteLine("\t\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
-                    VisualAllParkingSpaces(parkingSpaces);
-                    DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
-                    break;
-                }
-            case 6:
-                {
-                    Console.WriteLine("\nProgrammet avslutas...\n\n");
-                    Thread.Sleep(1000); // HJH: La in en liten paus innan programmet stängs
-                    displayMenu = false;
-                    break;
-                }
-            default:
-                {
-                    Console.Clear();
-                    Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-6");
-                    Console.ReadKey();
-                    break;
-                }
+                while (!isValid) ;
+                break;
+        }
+                            case 4:
+            {
+                Console.Clear();
+                Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
+                CheckaOut("ABC123", parkingSpaces);
+                //CheckoutVehicle();
+                break;
+            }
+        case 5:
+            {
+                // Claes - detta är en VG-funktion
+                Console.Clear();
+                Console.WriteLine("\t\t~~ ÖVERSIKT ÖVER PARKERINGEN ~~");
+                VisualAllParkingSpaces(parkingSpaces);
+                DisplayParking(); //La till denna tillfälligt för att kunna testköra programmet 
+                break;
+            }
+        case 6:
+            {
+                Console.WriteLine("\nProgrammet avslutas...\n\n");
+                Thread.Sleep(1000); // HJH: La in en liten paus innan programmet stängs
+                displayMenu = false;
+                break;
+            }
+        default:
+            {
+                Console.Clear();
+                Console.WriteLine("Ogiltigt val, vänligen ange ett menyval mellan 1-6");
+                Console.ReadKey();
+                break;
+            }
         }
     }
     catch
@@ -152,7 +176,7 @@ void RegisterParking(string? vehicleType)
         }
     }
     while (string.IsNullOrEmpty(input) || input.Length > 10);
-    
+
     regNumber = input.ToUpper();
     int parkingIndex = -1; // initierar en ny int variabel med värdet -1 för att hålla reda på vilken p-plats fordonet tilldelas. -1 betyder att ingen plats har hittats än
                            //om det inte finns en ledig plats förblir värdet -1 och ett felmeddelande visas, används även för att visa info om var fordonet parkerats
@@ -207,25 +231,25 @@ void RegisterParking(string? vehicleType)
     //Console.ReadLine();
 }
 
-//Metod för att menyval vid registrering av fordon
+//Metod för att visa menyval vid registrering av fordon
 static string? VehicleType()
 {
     Console.Clear();
-    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~"); //lägger in denna här istället för i MainMenu(); då konsolen rensas och denna rad försvinner då.
+    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
     Console.WriteLine("\n\t[1] Bil\n\t[2] MC");
     Console.Write("\n\tVälj fordonstyp eller tryck [ENTER] för att återgå: ");
 
     //denna kod kommer att låta användaren återgå till huvudmenyn om inmatningen är tom
     string input = Console.ReadLine();
-    if (string.IsNullOrEmpty(input)) 
-    { 
-        return null; 
+    if (string.IsNullOrEmpty(input))
+    {
+        return null;
     }
 
-    if (int.TryParse(input, out int menuSelect)) //om input är giltig siffra - deklareras en int menuSelect
-    //try
-        {
-    //    int menuSelect = int.Parse(Console.ReadLine());
+    if (int.TryParse(input, out int menuSelect)) //om input är giltigt heltal - deklareras en int menuSelect
+                                                 //try
+    {
+        //    int menuSelect = int.Parse(Console.ReadLine());
         switch (menuSelect)
         {
             case 1:
@@ -281,7 +305,7 @@ string PrintParkingSpaceInfo(int index)
         string[] temp0 = splitMC[0].Split("#");
         string[] temp1 = splitMC[1].Split("#");
         return String.Format($"\n\tPlats {index}: {temp0[0]}#{temp0[1]} {mcDelimiter} {temp1[0]}#{temp1[1]}"); //la till mcDelimiter
-                                                                                                             // HJH: ändrade till temp1[] för att skriva ut andra mc:n
+                                                                                                               // HJH: ändrade till temp1[] för att skriva ut andra mc:n
     }
     // Om det inte står 2 MC på platsen --> ett fordon på p-platsen
     else
@@ -329,10 +353,8 @@ void SearchVehicle(string searchNumber)
 //Metod för att flytta fordon
 /// Flyttar ett fordon från en plats till en annan.
 /// Hanterar regler för bil/MC/2 MC.
-void MoveVehicle(int fromSpot, int toSpot) 
+void MoveVehicle(int fromSpot, int toSpot)
 {
-  
-
     if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
     {
         Console.WriteLine(" Ogiltigt platsnummer!");
@@ -447,8 +469,9 @@ void DisplayParking()
     if (!isParked)
     {
         Console.WriteLine("\n\tDet finns inga parkerade fordon");
-        
-    }Console.Write("\tTryck på en tangent för att återgå till huvudmenyn...");
+
+    }
+    Console.Write("\tTryck på en tangent för att återgå till huvudmenyn...");
     Console.ReadKey();
 }
 
