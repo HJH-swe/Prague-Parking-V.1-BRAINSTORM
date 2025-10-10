@@ -1,7 +1,4 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
-using System;
-using System.Reflection.Metadata.Ecma335;
-
 string? vehicleType;
 string regNumber;
 string delimiter = "#";
