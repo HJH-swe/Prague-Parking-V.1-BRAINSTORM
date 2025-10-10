@@ -9,6 +9,9 @@ int menuInput;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
+parkingSpaces[1] = "MC#AAA111|MC#BBB222";
+parkingSpaces[2] = "MC#CCC333";
+parkingSpaces[3] = "CAR#DDD444";
 
 do
 {
@@ -109,7 +112,7 @@ void MainMenu()
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
                     Console.Write("\nAnge regnummer för utcheckning: ");
-                    regNumber = Console.ReadLine();
+                    regNumber = Console.ReadLine().ToUpper();           
                     string result = CheckOutVehicle(regNumber);
                     Console.WriteLine(result);
                     Console.ReadLine();
@@ -505,23 +508,28 @@ string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar at
                                                                     // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
                 if (splitMC[0].Contains(regNumber))
+                {
 
                     parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+                }
 
                 else if (splitMC[1].Contains(regNumber))
+                {
 
                     parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
-
+                }
 
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
+
+            /*
 
             if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
             {
                 parkingSpaces[i] = null; // tar bort fordonet från platsen
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
 
-            }
+            }*/
 
             else
             {
@@ -529,8 +537,9 @@ string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar at
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
         }
+        
     }
-    return $"Fordon med registreringsnummer {regNumber} hittades inte.";
+        return $"Fordon med registreringsnummer {regNumber} hittades inte.";        //testar att flytta in det här i else    
 }
 void DisplayParking()
 {
