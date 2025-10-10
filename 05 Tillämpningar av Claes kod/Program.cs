@@ -457,7 +457,7 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
         if (parkingSpaces[i].Contains(regNumber))       //Hittar vi fordonet med regNumber så går vi vidare
-        { 
+        {
             if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
 
             {
@@ -465,118 +465,119 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
                                                                     // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
                 if (splitMC[0].Contains(regNumber))
-                
+
                     parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
 
                 else if (splitMC[1].Contains(regNumber))
-                
+
                     parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
 
 
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
-        }
-    
+            }
+
             if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
             {
                 parkingSpaces[i] = null; // tar bort fordonet från platsen
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
-            
+
             }
-               
-              else
-        {
-                parkingSpaces[i] = null; // tar bort fordonet från platsen
-                return $"Fordon {regNumber} har checkats ut från plats {i}.";
-}
-    }
 
-
-void DisplayParking()
-{
-    bool isParked = false;
-
-    Console.WriteLine("\n\n\t~ Incheckade fordon ~");
-    for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
-    {
-        if (!string.IsNullOrEmpty(parkingSpaces[i]))
-        {
-            Console.WriteLine(PrintParkingSpaceInfo(i));
-            isParked = true;
-        }
-    }
-    if (!isParked)
-    {
-        Console.WriteLine("\n\tDet finns inga parkerade fordon");
-
-    }
-    Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
-    Console.ReadKey();
-}
-
-void VisualAllParkingSpaces(string[] parkingSpaces)
-{
-    Console.Write("\n\tLediga p-platser är ");
-    Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine("gröna ");
-    Console.ForegroundColor = ConsoleColor.Gray;
-    Console.Write("\tHalvfulla p-platser (med 1 MC) är ");
-    Console.ForegroundColor = ConsoleColor.Yellow;
-    Console.WriteLine("gula ");
-    Console.ForegroundColor = ConsoleColor.Gray;
-    Console.Write("\tFyllda p-platser (med 1 bil eller 2 MC) är ");
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine("röda \n\n");
-
-
-    string[,] parkingMatrix = new string[10, 10];
-    // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
-    int counter = 1;
-
-    // Lägger in strängarna från vektorn parkingSpaces i matrisen
-    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
-    {
-        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
-        {
-            // Räknaren används som index på parkingSpaces[] - för att få strängarna på rätt plats [i, j]
-            parkingMatrix[i, j] = parkingSpaces[counter];
-            counter++;
-        }
-    }
-
-    // Räknaren börjar om på 1 (för att p-platserna börjar på 1)
-    counter = 1;
-    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
-    {
-        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
-        {
-            if (parkingMatrix[i, j] != null)
-            {
-                // OM det står en bil eller två mc på platsen --> upptagen
-                if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("\t" + counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
-                }
-                // ANNARS OM det står en mc på platsen --> halvfylld
-                else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write("\t" + counter.ToString().PadLeft(4));
-                }
-            }
-            // ANNARS: ingen bil eller mc på platsen --> tom
             else
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write("\t" + counter.ToString().PadLeft(4));
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
-            counter++;
         }
-        Console.WriteLine();
     }
-    Console.ForegroundColor = ConsoleColor.Gray;
 }
+    void DisplayParking()
+    {
+        bool isParked = false;
 
+        Console.WriteLine("\n\n\t~ Incheckade fordon ~");
+        for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
+        {
+            if (!string.IsNullOrEmpty(parkingSpaces[i]))
+            {
+                Console.WriteLine(PrintParkingSpaceInfo(i));
+                isParked = true;
+            }
+        }
+        if (!isParked)
+        {
+            Console.WriteLine("\n\tDet finns inga parkerade fordon");
+
+        }
+        Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
+        Console.ReadKey();
+    }
+
+    void VisualAllParkingSpaces(string[] parkingSpaces)
+    {
+        Console.Write("\n\tLediga p-platser är ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("gröna ");
+        Console.ForegroundColor = ConsoleColor.Gray;
+        Console.Write("\tHalvfulla p-platser (med 1 MC) är ");
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("gula ");
+        Console.ForegroundColor = ConsoleColor.Gray;
+        Console.Write("\tFyllda p-platser (med 1 bil eller 2 MC) är ");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("röda \n\n");
+
+
+        string[,] parkingMatrix = new string[10, 10];
+        // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+        int counter = 1;
+
+        // Lägger in strängarna från vektorn parkingSpaces i matrisen
+        for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+            {
+                // Räknaren används som index på parkingSpaces[] - för att få strängarna på rätt plats [i, j]
+                parkingMatrix[i, j] = parkingSpaces[counter];
+                counter++;
+            }
+        }
+
+        // Räknaren börjar om på 1 (för att p-platserna börjar på 1)
+        counter = 1;
+        for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+            {
+                if (parkingMatrix[i, j] != null)
+                {
+                    // OM det står en bil eller två mc på platsen --> upptagen
+                    if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\t" + counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
+                    }
+                    // ANNARS OM det står en mc på platsen --> halvfylld
+                    else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.Write("\t" + counter.ToString().PadLeft(4));
+                    }
+                }
+                // ANNARS: ingen bil eller mc på platsen --> tom
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("\t" + counter.ToString().PadLeft(4));
+                }
+                counter++;
+            }
+            Console.WriteLine();
+        }
+        Console.ForegroundColor = ConsoleColor.Gray;
+    }
+
+    
         //Flyttar ner denna då den inte används för tillfället /SR
         // En metod som skriver ut info om fordon. Kan användas i andra metoder:
         //string PrintVehicleInfo(int index)
