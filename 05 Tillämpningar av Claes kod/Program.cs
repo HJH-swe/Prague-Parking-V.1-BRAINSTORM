@@ -492,6 +492,10 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
             }
         }
     }
+
+    return $"Fordon med registreringsnummer {regNumber} hittades inte.";
+
+
 }
     void DisplayParking()
     {
