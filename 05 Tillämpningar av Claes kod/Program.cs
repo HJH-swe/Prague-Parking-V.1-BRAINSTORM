@@ -1,4 +1,6 @@
 ﻿// Deklarerar variabler som behövs genom hela programmet
+using System;
+
 string? vehicleType;
 string regNumber;
 string delimiter = "#";
@@ -101,9 +103,11 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    //CheckoutVehicle();
+
+
                     break;
                 }
+
             case 5:
                 {
                     // Claes - detta är en VG-funktion
