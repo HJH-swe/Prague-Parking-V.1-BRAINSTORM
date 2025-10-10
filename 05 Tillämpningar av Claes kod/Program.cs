@@ -101,7 +101,6 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    CheckaOut("ABC123", parkingSpaces);
                     //CheckoutVehicle();
                     break;
                 }
@@ -446,25 +445,51 @@ bool IsValidIndex(int index)
 /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
 // String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 // --> string1 = MC#ABC123  string2 = MC#CDE456
+// OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
+// Kod som bara tar bort rätt fordon
+// Splitta strängen och ta bort rätt del
+
+// ANNARS (då står det bara ett fordon på platsen)
+// kod som nollställer platsen
 
 string CheckaOut(string regNumber, string[] parkingSpaces)
 {
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
-        if (parkingSpaces[i].Contains(regNumber))
-        {
-            // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
-            // Kod som bara tar bort rätt fordon
-            // Splitta strängen och ta bort rätt del
+        if (parkingSpaces[i].Contains(regNumber))       //Hittar vi fordonet med regNumber så går vi vidare
+        { 
+            if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
 
-            // ANNARS (då står det bara ett fordon på platsen)
-            // kod som nollställer platsen
-            parkingSpaces[i] = null; // tar bort bilen
-            return $"Fordon {regNumber} har checkats ut från plats {i}.";
+            {
+                string[] splitMC = parkingSpaces[i].Split('|');     // Delar upp strängen i två delar för att checka korrekt MC
+                                                                    // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
+
+                if (splitMC[0].Contains(regNumber))
+                
+                    parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+
+                else if (splitMC[1].Contains(regNumber))
+                
+                    parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
+
+
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
         }
-    }
-    return $"Inget fordon med regnr {regNumber} hittades.";
+    
+            if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
+            {
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
+            
+            }
+               
+              else
+        {
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
 }
+    }
+
 
 void DisplayParking()
 {
@@ -552,96 +577,96 @@ void VisualAllParkingSpaces(string[] parkingSpaces)
     Console.ForegroundColor = ConsoleColor.Gray;
 }
 
-//Flyttar ner denna då den inte används för tillfället /SR
-// En metod som skriver ut info om fordon. Kan användas i andra metoder:
-//string PrintVehicleInfo(int index)
-//{
-//    string[] temp = parkingSpaces[index].Split('#');
-//    return String.Format("{0} {1} står på plats: {2}", temp[0], temp[1], index);
-//}
+        //Flyttar ner denna då den inte används för tillfället /SR
+        // En metod som skriver ut info om fordon. Kan användas i andra metoder:
+        //string PrintVehicleInfo(int index)
+        //{
+        //    string[] temp = parkingSpaces[index].Split('#');
+        //    return String.Format("{0} {1} står på plats: {2}", temp[0], temp[1], index);
+        //}
 
-/*void DisplayLog(int parkingIndex) //kanske ska använda denna metod för själva parkeringsöversikten?
-                  //HJH: Låter smart! Kanske kan visa loggen unden den visuella representationen av hela parkeringen? 
-                  //behöver troligtvis modifieras en aning då den är kopplad till SaveLog(); vilket jag tog bort från RegistreraFordon()
-{
-    if (logs.Count == 0)
-    {
-        if (vehicleType == "MC")
+        /*void DisplayLog(int parkingIndex) //kanske ska använda denna metod för själva parkeringsöversikten?
+                          //HJH: Låter smart! Kanske kan visa loggen unden den visuella representationen av hela parkeringen? 
+                          //behöver troligtvis modifieras en aning då den är kopplad till SaveLog(); vilket jag tog bort från RegistreraFordon()
         {
-            if (string.IsNullOrEmpty(parkingSpaces[parkingIndex]))
+            if (logs.Count == 0)
             {
-                parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
-            }
-            else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDelimiter))
-            {
-                parkingSpaces[parkingIndex] += mcDelimiter + vehicleType + delimiter + regNumber;
-            }
-            // Annars: platsen är full för MC
-        }
-        else // CAR
-        {
-            parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
-        }
-        PrintParkingSpaceInfo(parkingIndex);
-    }
-}*/
-
-
-//kommenterar på denna tillsvidare då den ej behövs
-//string SaveLog(string vehicleType, string typeDivider, string regNumber, int parkingPlace, DateTime startTime)
-//{
-//    string log = ($"Parkeringplats {parkingPlace}: {vehicleType}{typeDivider}{regNumber}\tIncheckad: {startTime: yyyy-MM-dd HH:mm:ss}");
-
-//    logs.Add(log);
-//    return log;
-//}
-
-
-//void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten? 
-//{
-//    if (logs.Count == 0)
-//    {
-//        Console.WriteLine("Ingen historik finns ännu");
-//        Console.ReadKey();
-//        return;
-//    }
-//    foreach (var log in logs)
-//    {
-//        Console.WriteLine(log);
-//    }
-//    Console.ReadKey();
-//}
-
-// la in denna för att kunna testa programmet och se om fordonen registreras korrekt
-
-
-// HJH: Jag klipper ut och sparar delar metoden MoveVehicle här .
-// Har krånglat till metoden hemskt mycket, och ska försöka reda ut det.
-// Men sparar kod vi redan hade i fall man måste stoppa in det igen.
-
-/* Från rad 430 - precis efter //Flytta MC och kombinera - parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
- 
-            // Borttagning av MC från fromSpot
-            string[] fromVehicles = parkingSpaces[fromSpot].Split('|');
-
-            // Om det stod 2 MC på fromSpot
-            if (fromVehicles.Length == 2)
-            {
-                // Ta bort en MC, lämna kvar den andra
-                if (fromVehicles[0] == vehicleToMove)
+                if (vehicleType == "MC")
                 {
-                    parkingSpaces[fromSpot] = fromVehicles[1];
+                    if (string.IsNullOrEmpty(parkingSpaces[parkingIndex]))
+                    {
+                        parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
+                    }
+                    else if (parkingSpaces[parkingIndex].StartsWith("MC#") && !parkingSpaces[parkingIndex].Contains(mcDelimiter))
+                    {
+                        parkingSpaces[parkingIndex] += mcDelimiter + vehicleType + delimiter + regNumber;
+                    }
+                    // Annars: platsen är full för MC
                 }
-                else if (fromVehicles[1] == vehicleToMove)
+                else // CAR
                 {
-                    parkingSpaces[fromSpot] = fromVehicles[0];
+                    parkingSpaces[parkingIndex] = vehicleType + delimiter + regNumber;
                 }
+                PrintParkingSpaceInfo(parkingIndex);
             }
-            else
-            {
-                // Endast en MC på platsen, ta bort den
-                parkingSpaces[fromSpot] = null;
-            }*/
+        }*/
+
+
+        //kommenterar på denna tillsvidare då den ej behövs
+        //string SaveLog(string vehicleType, string typeDivider, string regNumber, int parkingPlace, DateTime startTime)
+        //{
+        //    string log = ($"Parkeringplats {parkingPlace}: {vehicleType}{typeDivider}{regNumber}\tIncheckad: {startTime: yyyy-MM-dd HH:mm:ss}");
+
+        //    logs.Add(log);
+        //    return log;
+        //}
+
+
+        //void DisplayLog() //kanske ska använda denna metod för själva parkeringsöversikten? 
+        //{
+        //    if (logs.Count == 0)
+        //    {
+        //        Console.WriteLine("Ingen historik finns ännu");
+        //        Console.ReadKey();
+        //        return;
+        //    }
+        //    foreach (var log in logs)
+        //    {
+        //        Console.WriteLine(log);
+        //    }
+        //    Console.ReadKey();
+        //}
+
+        // la in denna för att kunna testa programmet och se om fordonen registreras korrekt
+
+
+        // HJH: Jag klipper ut och sparar delar metoden MoveVehicle här .
+        // Har krånglat till metoden hemskt mycket, och ska försöka reda ut det.
+        // Men sparar kod vi redan hade i fall man måste stoppa in det igen.
+
+        /* Från rad 430 - precis efter //Flytta MC och kombinera - parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
+
+                    // Borttagning av MC från fromSpot
+                    string[] fromVehicles = parkingSpaces[fromSpot].Split('|');
+
+                    // Om det stod 2 MC på fromSpot
+                    if (fromVehicles.Length == 2)
+                    {
+                        // Ta bort en MC, lämna kvar den andra
+                        if (fromVehicles[0] == vehicleToMove)
+                        {
+                            parkingSpaces[fromSpot] = fromVehicles[1];
+                        }
+                        else if (fromVehicles[1] == vehicleToMove)
+                        {
+                            parkingSpaces[fromSpot] = fromVehicles[0];
+                        }
+                    }
+                    else
+                    {
+                        // Endast en MC på platsen, ta bort den
+                        parkingSpaces[fromSpot] = null;
+                    }*/
 
 /* HJH: Den här metoden används inte - lägger den här 
 void PrintGarage()
