@@ -465,13 +465,15 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
                                                                     // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
                 if (splitMC[0].Contains(regNumber))
+                {
 
                     parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+                }
 
                 else if (splitMC[1].Contains(regNumber))
-
+                {
                     parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
-
+                }
 
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
