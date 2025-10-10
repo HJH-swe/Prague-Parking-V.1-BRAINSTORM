@@ -11,7 +11,10 @@ int menuInput;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
-
+parkingSpaces[1] = "CAR#DEF456";
+parkingSpaces[2] = "CAR#GHI789";
+parkingSpaces[3] = "MC#ABC456";
+parkingSpaces[4] = "MC#DEF789";
 do
 {
     MainMenu();
@@ -87,22 +90,19 @@ void MainMenu()
                 }
             case 3:
                 {
+                    bool isValid = false;
+                    do {    
                     Console.Clear();
                     Console.WriteLine("\t ~~ FLYTTA FORDON ~~");
-                    // La in "bilden" över hela parkeringen -> lättare för användaren att välja p-platser att flytta från och till
-                    VisualAllParkingSpaces(parkingSpaces);
-
-                    Console.Write("\nAnge p-plats att flytta fordonet från: ");
-                    int.TryParse(Console.ReadLine(), out int fromSpot);
-                    Console.Write("\nAnge p-plats att flytta fordonet till: ");
-                    int.TryParse(Console.ReadLine(), out int toSpot);
-                    MoveVehicle(fromSpot, toSpot);
+                    // HJH: Behöver lägga till lite kod här för att få fram int fromSpot och int toSpot (metodens parametrar)
+                    MoveVehicle(1, 2);
                     break;
                 }
             case 4:
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
+                    CheckaOut("ABC123", parkingSpaces);
                     //CheckoutVehicle();
                     break;
                 }
@@ -218,11 +218,11 @@ void RegisterParking(string? vehicleType)
     //Console.ReadLine();
 }
 
-//Metod med menyval vid registrering av fordon
+//Metod för att menyval vid registrering av fordon
 static string? VehicleType()
 {
     Console.Clear();
-    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~"); //lägger in denna här istället för i MainMenu(); då konsolen rensas och denna rad försvinner då.
+    Console.WriteLine("\t ~~ REGISTRERA FORDON ~~");
     Console.WriteLine("\n\t[1] Bil\n\t[2] MC");
     Console.Write("\n\tVälj fordonstyp eller tryck [ENTER] för att återgå: ");
 
@@ -234,9 +234,9 @@ static string? VehicleType()
     }
 
     if (int.TryParse(input, out int menuSelect)) //om input är giltig siffra - deklareras en int menuSelect
-                                                 //try
-    {
-        //    int menuSelect = int.Parse(Console.ReadLine());
+    //try
+        {
+    //    int menuSelect = int.Parse(Console.ReadLine());
         switch (menuSelect)
         {
             case 1:
@@ -337,10 +337,12 @@ void SearchVehicle(string searchNumber)
     Console.ReadLine();
 }
 
-
-//Metod för att flytta fordon från en plats till en annan.
-void MoveVehicle(int fromSpot, int toSpot)
+//Metod för att flytta fordon
+/// Flyttar ett fordon från en plats till en annan.
+/// Hanterar regler för bil/MC/2 MC.
+void MoveVehicle(int fromSpot, int toSpot) 
 {
+  
 
     if (!IsValidIndex(fromSpot) || !IsValidIndex(toSpot))
     {
@@ -494,28 +496,31 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
             }
         }
     }
+
+    return $"Fordon med registreringsnummer {regNumber} hittades inte.";
+
+
 }
     void DisplayParking()
     {
         bool isParked = false;
 
-        Console.WriteLine("\n\n\t~ Incheckade fordon ~");
-        for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
+    Console.WriteLine("\n\n\t~ Incheckade bilar ~");
+    for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
+    {
+        if (!string.IsNullOrEmpty(parkingSpaces[i]))
         {
-            if (!string.IsNullOrEmpty(parkingSpaces[i]))
-            {
-                Console.WriteLine(PrintParkingSpaceInfo(i));
-                isParked = true;
-            }
+            Console.WriteLine(PrintParkingSpaceInfo(i));
+            isParked = true;
         }
-        if (!isParked)
-        {
-            Console.WriteLine("\n\tDet finns inga parkerade fordon");
-
-        }
-        Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
-        Console.ReadKey();
     }
+    if (!isParked)
+    {
+        Console.WriteLine("\n\tDet finns inga parkerade fordon");
+        
+    }Console.Write("\tTryck på en tangent för att återgå till huvudmenyn...");
+    Console.ReadKey();
+}
 
     void VisualAllParkingSpaces(string[] parkingSpaces)
     {
