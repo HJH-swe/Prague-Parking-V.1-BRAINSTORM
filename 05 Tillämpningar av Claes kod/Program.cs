@@ -1,4 +1,6 @@
-﻿// Deklarerar variabler som behövs genom hela programmet
+﻿//Lägger till en kommentar 10/10/25
+
+// Deklarerar variabler som behövs genom hela programmet
 string? vehicleType;
 string regNumber;
 string delimiter = "#";
