@@ -34,7 +34,13 @@ void MainMenu()
 
     try
     {
-        menuInput = int.Parse(Console.ReadLine());
+        string input = Console.ReadLine();
+        if (!int.TryParse(input, out menuInput))
+        {
+            Console.WriteLine("\tOgiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
+            Console.ReadLine();
+            return;
+        }
 
         switch (menuInput)
         {
@@ -101,7 +107,11 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-                    //CheckoutVehicle();
+                    Console.Write("\nAnge regnummer för utcheckning: ");
+                    regNumber=Console.ReadLine();
+                    string result=CheckOutVehicle(regNumber);
+                    Console.WriteLine(result);
+                    Console.ReadLine();
                     break;
                 }
             case 5:
@@ -131,7 +141,7 @@ void MainMenu()
     }
     catch
     {
-        Console.WriteLine("\tOgiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
+        Console.WriteLine("\tEtt oväntat fel inträffade.\n\n");
         Console.ReadLine(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
     }
 
@@ -461,11 +471,11 @@ void MoveVehicle(int fromSpot, int toSpot)
     // ANNARS (då står det bara ett fordon på platsen)
     // kod som nollställer platsen
 
-    string CheckaOut(string regNumber, string[] parkingSpaces)
+    string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar att kommentera bort denna kod
     {
         for (int i = 1; i < parkingSpaces.Length; i++)
         {
-            if (parkingSpaces[i].Contains(regNumber))       //Hittar vi fordonet med regNumber så går vi vidare
+            if (parkingSpaces[i].Contains(regNumber))      // Hittar vi fordonet med regNumber så går vi vidare
             {
                 if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
 
