@@ -11,6 +11,9 @@ int menuInput;
 // List<string> logs = new List<string>();     //skapar en lista för händelser - används inte för tillfället
 // Lägger in en bil på parkingSpaces[0] - endast testdata. Vi tar bort det sen
 parkingSpaces[0] = "CAR#ABC123";
+parkingSpaces[1] = "MC#AAA111|MC#BBB222";
+parkingSpaces[2] = "MC#CCC333";
+parkingSpaces[3] = "CAR#DDD444";
 
 do
 {
@@ -36,7 +39,14 @@ void MainMenu()
 
     try
     {
-        menuInput = int.Parse(Console.ReadLine());
+        //lägger in denna validering för det uppstår fel när användaren trycker ENTER eller skriver något som inte är en siffra., upptäckte det när jag testade menyval 4. 
+        string input = Console.ReadLine();
+        if (!int.TryParse(input, out menuInput))
+        {
+            Console.WriteLine("\tOgiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
+            Console.ReadLine();
+            return;
+        }
 
         switch (menuInput)
         {
@@ -103,8 +113,11 @@ void MainMenu()
                 {
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
-
-
+                    Console.Write("\nAnge regnummer för utcheckning: ");
+                    regNumber = Console.ReadLine().ToUpper();           
+                    string result = CheckOutVehicle(regNumber);
+                    Console.WriteLine(result);
+                    Console.ReadLine();
                     break;
                 }
 
@@ -135,10 +148,22 @@ void MainMenu()
     }
     catch
     {
-        Console.WriteLine("\tOgiltigt menyval. Välj i menyn genom att trycka på siffertangenterna.\n\n");
+        Console.WriteLine("\tEtt oväntat fel inträffade.\n\n");
         Console.ReadLine(); //Lägger till denna kod för att pausa progrmmet innan den återgår till menyvalen
     }
 
+}
+
+bool IsRegNumberRegistered(string regNumber) //kontrollerar om regnummer redan finns registrerad
+{
+    for (int i = 1; i < parkingSpaces.Length; i++)
+    {
+        if (parkingSpaces[i] != null && parkingSpaces[i].Contains(regNumber))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 //Registrera parkering:
@@ -164,6 +189,14 @@ void RegisterParking(string? vehicleType)
     while (string.IsNullOrEmpty(input) || input.Length > 10);
 
     regNumber = input.ToUpper();
+
+    if (IsRegNumberRegistered(regNumber))
+
+    {
+        Console.WriteLine($"\n\tFordon med registreringsnummer {regNumber.ToUpper()} är redan registrerat.");
+        Console.ReadLine();
+        return;
+    }
     int parkingIndex = -1; // initierar en ny int variabel med värdet -1 för att hålla reda på vilken p-plats fordonet tilldelas. -1 betyder att ingen plats har hittats än
                            //om det inte finns en ledig plats förblir värdet -1 och ett felmeddelande visas, används även för att visa info om var fordonet parkerats
 
@@ -405,6 +438,7 @@ void MoveVehicle(int fromSpot, int toSpot)
     {
         // Målruta tom → flytta direkt
         parkingSpaces[toSpot] = vehicleToMove;
+        parkingSpaces[fromSpot] = splitRequired ? parkingSpaces[fromSpot] : null; // ser till att platsen blir tom om ett fordon flyttas, eller att rätt MC blir kvar om två MC delar plats
         Console.WriteLine($"\n\nFordon {vehicleToMove} flyttades från plats {fromSpot} till {toSpot}.");
     }
     else
@@ -415,7 +449,15 @@ void MoveVehicle(int fromSpot, int toSpot)
         if (parkingSpaces[toSpot].Contains("CAR"))
         {
             Console.WriteLine($"\n\nKan inte flytta till plats {toSpot}, bil upptar platsen.");
-            parkingSpaces[fromSpot] = vehicleToMove;
+            if (splitRequired) //om det stod två MC på platsen och flytt misslyckas, sätt tillbaka fordonet till ursprungsplatsen
+            {
+                parkingSpaces[fromSpot] = vehiclesAtFrom[0] + "|" + vehiclesAtFrom[1];
+            }
+            else
+            {
+
+                parkingSpaces[fromSpot] = vehicleToMove;
+            }
             Console.ReadKey();
             return;
         }
@@ -456,11 +498,11 @@ bool IsValidIndex(int index)
 // ANNARS (då står det bara ett fordon på platsen)
 // kod som nollställer platsen
 
-string CheckaOut(string regNumber, string[] parkingSpaces)
+string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar att kommentera bort denna kod
 {
     for (int i = 1; i < parkingSpaces.Length; i++)
     {
-        if (parkingSpaces[i].Contains(regNumber))       //Hittar vi fordonet med regNumber så går vi vidare
+        if (parkingSpaces[i].Contains(regNumber))      // Hittar vi fordonet med regNumber så går vi vidare
         {
             if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
 
@@ -469,23 +511,28 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
                                                                     // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
                 if (splitMC[0].Contains(regNumber))
+                {
 
                     parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+                }
 
                 else if (splitMC[1].Contains(regNumber))
+                {
 
                     parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
-
+                }
 
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
+
+            /*
 
             if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
             {
                 parkingSpaces[i] = null; // tar bort fordonet från platsen
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
 
-            }
+            }*/
 
             else
             {
@@ -493,8 +540,9 @@ string CheckaOut(string regNumber, string[] parkingSpaces)
                 return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
         }
+        
     }
-    return $"Fordon med registreringsnummer {regNumber} hittades inte.";
+        return $"Fordon med registreringsnummer {regNumber} hittades inte.";        //testar att flytta in det här i else    
 }
 void DisplayParking()
 {
