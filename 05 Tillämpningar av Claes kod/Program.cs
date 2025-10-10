@@ -108,8 +108,8 @@ void MainMenu()
                     Console.Clear();
                     Console.WriteLine("\t ~~ CHECKA UT FORDON ~~");
                     Console.Write("\nAnge regnummer för utcheckning: ");
-                    regNumber=Console.ReadLine();
-                    string result=CheckOutVehicle(regNumber);
+                    regNumber = Console.ReadLine();
+                    string result = CheckOutVehicle(regNumber);
                     Console.WriteLine(result);
                     Console.ReadLine();
                     break;
@@ -147,6 +147,18 @@ void MainMenu()
 
 }
 
+bool IsRegNumberRegistered(string regNumber) //kontrollerar om regnummer redan finns registrerad
+{
+    for (int i = 1; i < parkingSpaces.Length; i++)
+    {
+        if (parkingSpaces[i] != null && parkingSpaces[i].Contains(regNumber))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 //Registrera parkering:
 void RegisterParking(string? vehicleType)
 {
@@ -170,6 +182,14 @@ void RegisterParking(string? vehicleType)
     while (string.IsNullOrEmpty(input) || input.Length > 10);
 
     regNumber = input.ToUpper();
+
+    if (IsRegNumberRegistered(regNumber))
+
+    {
+        Console.WriteLine($"\n\t Fordon med registreringsnummer {regNumber} är redan registrerat.");
+        Console.ReadLine();
+        return;
+    }
     int parkingIndex = -1; // initierar en ny int variabel med värdet -1 för att hålla reda på vilken p-plats fordonet tilldelas. -1 betyder att ingen plats har hittats än
                            //om det inte finns en ledig plats förblir värdet -1 och ett felmeddelande visas, används även för att visa info om var fordonet parkerats
 
@@ -431,171 +451,171 @@ void MoveVehicle(int fromSpot, int toSpot)
 
                 parkingSpaces[fromSpot] = vehicleToMove;
             }
-                Console.ReadKey();
-                return;
-            }
+            Console.ReadKey();
+            return;
+        }
 
-            // Fall: MC finns på målrutan: Om bara en MC → flytta dit MC.
-            if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
+        // Fall: MC finns på målrutan: Om bara en MC → flytta dit MC.
+        if (vehiclesAtTo.Length == 1 && vehicleToMove.StartsWith("MC"))
+        {
+            // Flytta MC och kombinera
+            parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
+
+            Console.WriteLine($"\n\nMC {vehicleToMove} flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
+        }
+        // Annars är platsen upptagen → flytten misslyckas
+        else
+        {
+            Console.WriteLine($"\n\nPlats {toSpot} är redan full. Kunde inte flytta fordon.");
+            parkingSpaces[fromSpot] = vehicleToMove;
+        }
+    }
+    Console.ReadLine();
+}
+
+bool IsValidIndex(int index)
+{
+    return index > 0 && index <= 100;
+}
+
+
+
+
+/* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
+// String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
+// --> string1 = MC#ABC123  string2 = MC#CDE456
+// OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
+// Kod som bara tar bort rätt fordon
+// Splitta strängen och ta bort rätt del
+
+// ANNARS (då står det bara ett fordon på platsen)
+// kod som nollställer platsen
+
+string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar att kommentera bort denna kod
+{
+    for (int i = 1; i < parkingSpaces.Length; i++)
+    {
+        if (parkingSpaces[i].Contains(regNumber))      // Hittar vi fordonet med regNumber så går vi vidare
+        {
+            if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
+
             {
-                // Flytta MC och kombinera
-                parkingSpaces[toSpot] = parkingSpaces[toSpot] + "|" + vehicleToMove;
+                string[] splitMC = parkingSpaces[i].Split('|');     // Delar upp strängen i två delar för att checka korrekt MC
+                                                                    // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
 
-                Console.WriteLine($"\n\nMC {vehicleToMove} flyttades från plats {fromSpot} till {toSpot} (nu 2 MC på plats {toSpot}).");
+                if (splitMC[0].Contains(regNumber))
+
+                    parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
+
+                else if (splitMC[1].Contains(regNumber))
+
+                    parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
+
+
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
-            // Annars är platsen upptagen → flytten misslyckas
+
+            if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
+            {
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
+
+            }
+
             else
             {
-                Console.WriteLine($"\n\nPlats {toSpot} är redan full. Kunde inte flytta fordon.");
-                parkingSpaces[fromSpot] = vehicleToMove;
+                parkingSpaces[i] = null; // tar bort fordonet från platsen
+                return $"Fordon {regNumber} har checkats ut från plats {i}.";
             }
         }
-        Console.ReadLine();
+    }
+    return $"Fordon med registreringsnummer {regNumber} hittades inte.";
+}
+void DisplayParking()
+{
+    bool isParked = false;
+
+    Console.WriteLine("\n\n\t~ Incheckade fordon ~");
+    for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
+    {
+        if (!string.IsNullOrEmpty(parkingSpaces[i]))
+        {
+            Console.WriteLine(PrintParkingSpaceInfo(i));
+            isParked = true;
+        }
+    }
+    if (!isParked)
+    {
+        Console.WriteLine("\n\tDet finns inga parkerade fordon");
+
+    }
+    Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
+    Console.ReadKey();
+}
+
+void VisualAllParkingSpaces(string[] parkingSpaces)
+{
+    Console.Write("\n\tLediga p-platser är ");
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("gröna ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("\tHalvfulla p-platser (med 1 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("gula ");
+    Console.ForegroundColor = ConsoleColor.Gray;
+    Console.Write("\tFyllda p-platser (med 1 bil eller 2 MC) är ");
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine("röda \n\n");
+
+
+    string[,] parkingMatrix = new string[10, 10];
+    // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
+    int counter = 1;
+
+    // Lägger in strängarna från vektorn parkingSpaces i matrisen
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
+    {
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
+        {
+            // Räknaren används som index på parkingSpaces[] - för att få strängarna på rätt plats [i, j]
+            parkingMatrix[i, j] = parkingSpaces[counter];
+            counter++;
+        }
     }
 
-    bool IsValidIndex(int index)
+    // Räknaren börjar om på 1 (för att p-platserna börjar på 1)
+    counter = 1;
+    for (int i = 0; i < parkingMatrix.GetLength(0); i++)
     {
-        return index > 0 && index <= 100;
-    }
-
-
-
-
-    /* För att checka ut ett fordon behöver jag först anropa att fordonet för att sedan konvertera det till att checka ut det, så första steget antar jag är att hitta fordonet tex via regnummer för att avgöra om det är en MC/BIL */
-    // String: MC#ABC123|MC#CDE456      -->  splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
-    // --> string1 = MC#ABC123  string2 = MC#CDE456
-    // OM platsen innehåller "|" (då står 2 mc på platsen, men vi vill ta bort 1)
-    // Kod som bara tar bort rätt fordon
-    // Splitta strängen och ta bort rätt del
-
-    // ANNARS (då står det bara ett fordon på platsen)
-    // kod som nollställer platsen
-
-    string CheckOutVehicle(string regNumber/*, string[] parkingSpaces*/) //testar att kommentera bort denna kod
-    {
-        for (int i = 1; i < parkingSpaces.Length; i++)
+        for (int j = 0; j < parkingMatrix.GetLength(1); j++)
         {
-            if (parkingSpaces[i].Contains(regNumber))      // Hittar vi fordonet med regNumber så går vi vidare
+            if (parkingMatrix[i, j] != null)
             {
-                if (parkingSpaces[i].Contains('|'))         //Hittar vi fordon med "|", då är det 2 MC på platsen
-
+                // OM det står en bil eller två mc på platsen --> upptagen
+                if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
                 {
-                    string[] splitMC = parkingSpaces[i].Split('|');     // Delar upp strängen i två delar för att checka korrekt MC
-                                                                        // splitMC[0] = MC#ABC123  splitMC[1] = MC#CDE456
-
-                    if (splitMC[0].Contains(regNumber))
-
-                        parkingSpaces[i] = splitMC[1];  //Denna MC ska checkas ut
-
-                    else if (splitMC[1].Contains(regNumber))
-
-                        parkingSpaces[i] = splitMC[0];  //Denna MC ska checkas ut
-
-
-                    return $"Fordon {regNumber} har checkats ut från plats {i}.";
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("\t" + counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
                 }
-
-                if (parkingSpaces[i].StartsWith("MC#"))     //Tar bort en MC från platsen
+                // ANNARS OM det står en mc på platsen --> halvfylld
+                else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
                 {
-                    parkingSpaces[i] = null; // tar bort fordonet från platsen
-                    return $"Fordon {regNumber} har checkats ut från plats {i}.";
-
-                }
-
-                else
-                {
-                    parkingSpaces[i] = null; // tar bort fordonet från platsen
-                    return $"Fordon {regNumber} har checkats ut från plats {i}.";
-                }
-            }
-        }
-        return $"Fordon med registreringsnummer {regNumber} hittades inte.";
-    }
-    void DisplayParking()
-    {
-        bool isParked = false;
-
-        Console.WriteLine("\n\n\t~ Incheckade fordon ~");
-        for (int i = 1; i < parkingSpaces.Length; i++) // Börja på 1, plats 0 är testdata
-        {
-            if (!string.IsNullOrEmpty(parkingSpaces[i]))
-            {
-                Console.WriteLine(PrintParkingSpaceInfo(i));
-                isParked = true;
-            }
-        }
-        if (!isParked)
-        {
-            Console.WriteLine("\n\tDet finns inga parkerade fordon");
-
-        }
-        Console.Write("\n\tTryck på en tangent för att återgå till huvudmenyn...");
-        Console.ReadKey();
-    }
-
-    void VisualAllParkingSpaces(string[] parkingSpaces)
-    {
-        Console.Write("\n\tLediga p-platser är ");
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("gröna ");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.Write("\tHalvfulla p-platser (med 1 MC) är ");
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("gula ");
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.Write("\tFyllda p-platser (med 1 bil eller 2 MC) är ");
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("röda \n\n");
-
-
-        string[,] parkingMatrix = new string[10, 10];
-        // Använder en räknare som börjar på 1 (för att p-plats 0 inte ska användas)
-        int counter = 1;
-
-        // Lägger in strängarna från vektorn parkingSpaces i matrisen
-        for (int i = 0; i < parkingMatrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < parkingMatrix.GetLength(1); j++)
-            {
-                // Räknaren används som index på parkingSpaces[] - för att få strängarna på rätt plats [i, j]
-                parkingMatrix[i, j] = parkingSpaces[counter];
-                counter++;
-            }
-        }
-
-        // Räknaren börjar om på 1 (för att p-platserna börjar på 1)
-        counter = 1;
-        for (int i = 0; i < parkingMatrix.GetLength(0); i++)
-        {
-            for (int j = 0; j < parkingMatrix.GetLength(1); j++)
-            {
-                if (parkingMatrix[i, j] != null)
-                {
-                    // OM det står en bil eller två mc på platsen --> upptagen
-                    if (parkingMatrix[i, j].Contains("CAR") || parkingMatrix[i, j].Contains('|'))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("\t" + counter.ToString().PadLeft(4));         // Hittade .PadLeft() på nätet för snygg formatering
-                    }
-                    // ANNARS OM det står en mc på platsen --> halvfylld
-                    else if (parkingMatrix[i, j].Contains("MC") && !(parkingMatrix[i, j].Contains('|')))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write("\t" + counter.ToString().PadLeft(4));
-                    }
-                }
-                // ANNARS: ingen bil eller mc på platsen --> tom
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.Write("\t" + counter.ToString().PadLeft(4));
                 }
-                counter++;
             }
-            Console.WriteLine();
+            // ANNARS: ingen bil eller mc på platsen --> tom
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write("\t" + counter.ToString().PadLeft(4));
+            }
+            counter++;
         }
-        Console.ForegroundColor = ConsoleColor.Gray;
+        Console.WriteLine();
     }
+    Console.ForegroundColor = ConsoleColor.Gray;
+}
 
 
 //Flyttar ner denna då den inte används för tillfället /SR
