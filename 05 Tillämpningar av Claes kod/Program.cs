@@ -186,7 +186,7 @@ void RegisterParking(string? vehicleType)
     if (IsRegNumberRegistered(regNumber))
 
     {
-        Console.WriteLine($"\n\t Fordon med registreringsnummer {regNumber} är redan registrerat.");
+        Console.WriteLine($"\n\tFordon med registreringsnummer {regNumber.ToUpper()} är redan registrerat.");
         Console.ReadLine();
         return;
     }
