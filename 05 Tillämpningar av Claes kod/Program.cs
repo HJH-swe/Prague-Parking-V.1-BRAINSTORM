@@ -34,6 +34,7 @@ void MainMenu()
 
     try
     {
+        //lägger in denna validering för det uppstår fel när användaren trycker ENTER eller skriver något som inte är en siffra., upptäckte det när jag testade menyval 4. 
         string input = Console.ReadLine();
         if (!int.TryParse(input, out menuInput))
         {
